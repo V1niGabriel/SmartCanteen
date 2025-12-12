@@ -7,7 +7,7 @@ db = SQLite3::Database.new "sistema_cantina.db"
 #Faz com que os resultados venham como Hash (mais fácil de ler) em vez de Array
 db.results_as_hash = true
 
-db.execute <<-SQL
+db.execute_batch <<-SQL
   CREATE TABLE IF NOT EXISTS produtos (
     id INTEGER PRIMARY KEY,
     nome VARCHAR(45),
@@ -32,18 +32,10 @@ db.execute <<-SQL
     id_item_venda INTEGER PRIMARY KEY,
     id_produto INTEGER,
     id_venda INTEGER,
-    quantidade INTEGER
+    quantidade INTEGER,
 
     FOREIGN KEY (id_produto) REFERENCES produtos(id),
     FOREIGN KEY (id_venda) REFERENCES vendas(id_venda)
   );
 SQL
-
-
-
-
-
-
-
-
 
