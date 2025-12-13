@@ -31,4 +31,3 @@ require_relative 'dbConn'
     FOREIGN KEY (id_venda) REFERENCES vendas(id_venda)
   );
 SQL
-
