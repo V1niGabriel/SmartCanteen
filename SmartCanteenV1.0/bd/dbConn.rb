@@ -1,6 +1,6 @@
 require 'sqlite3'
 
-@db = SQLite3::Database.new "SmartCanteenV1.0/bd/sistema_cantina.db"
+@db = SQLite3::Database.new "bd/sistema_cantina.db"
 
 #Habilita o uso de chaves estrangeiras
 @db.execute("PRAGMA foreign_keys = ON")
