@@ -109,22 +109,65 @@ def validarData(data)
   end
 end
 
-def totalVendasDia(data_valida) #IAN DISSE QUE VAI FAZER ENTÃO FICA PRA ELE FAZER
+def totalVendasDia(data_valida)
   begin
     data_inicio = data_valida.strftime("%Y-%m-%d 00:00:00")
-    data_fim = data_valida.strftime("%Y-%m-%d 23:59:59")
-    vendas = @db.execute("SELECT V.id_venda, C.nome AS cliente_nome, P.nome AS produto_nome 
-                          FROM vendas V 
-                          JOIN clientes C ON V.cliente_ID = C.id 
-                          JOIN produtos P ON V.id_venda = P.id 
-                          WHERE V.data_da_compra BETWEEN ? AND ?", [data_inicio, data_fim])
-    total = 0
-    vendas.each do |venda|
-      total += 1
+    data_fim    = data_valida.strftime("%Y-%m-%d 23:59:59")
+
+    query = <<-SQL
+      SELECT 
+        v.id_venda,
+        v.data_da_compra,
+        c.nome AS cliente,
+        p.nome AS produto,
+        iv.quantidade,
+        p.preco,
+        (iv.quantidade * p.preco) AS subtotal
+      FROM vendas v
+      JOIN clientes c ON v.cliente_id = c.id
+      JOIN itens_da_venda iv ON v.id_venda = iv.id_venda
+      JOIN produtos p ON iv.id_produto = p.id
+      WHERE v.data_da_compra BETWEEN ? AND ?
+      ORDER BY v.id_venda
+    SQL
+
+    vendas = @db.execute(query, [data_inicio, data_fim])
+
+    if vendas.empty?
+      puts "Nenhuma venda registrada em #{data_valida.strftime('%d/%m/%Y')}"
+      return
     end
-    puts "Total de vendas no dia #{data_valida}: #{total}"
-  rescue SQLite3::BusyException
-    puts "Erro DB 501 - DB Ocupado: O arquivo está travado"
+
+    puts "RELATÓRIO DE VENDAS DO DIA #{data_valida.strftime('%d/%m/%Y')}".center(60)
+    sep(:simples)
+
+    vendas_agrupadas = vendas.group_by { |linha| linha['id_venda'] }
+    quantidade_vendas = vendas_agrupadas.size
+
+    puts "Quantidade de vendas no dia: #{quantidade_vendas}"
+    sep(:simples)
+
+    total_dia = 0
+
+    vendas_agrupadas.each do |id_venda, itens|
+      venda_info = itens.first
+      total_venda = itens.sum { |i| i['subtotal'].to_f }
+      total_dia += total_venda
+
+      sep(:estrela)
+      puts "ID: #{id_venda} | Data: #{venda_info['data_da_compra']} | Cliente: #{venda_info['cliente']}"
+      puts "TOTAL DA VENDA: R$ #{'%.2f' % total_venda}"
+      puts "PRODUTOS:"
+
+      itens.each do |item|
+        puts "  -> #{item['produto']} | Qtd: #{item['quantidade']} | Preço: R$ #{'%.2f' % item['preco']} | Subtotal: R$ #{'%.2f' % item['subtotal']}"
+      end
+    end
+
+    sep(:simples)
+    puts "VALOR TOTAL FATURADO NO DIA: R$ #{'%.2f' % total_dia}"
+    sep(:simples)
+
   rescue SQLite3::SQLException => e
     puts "Erro DB 500 - Erro SQL: #{e.message}"
   rescue StandardError => e
@@ -136,11 +179,12 @@ def produtoMaisVendido
   begin
     produto = @db.get_first_row <<-SQL
       SELECT 
-        produtos.nome AS nome,
-        SUM(itens_da_venda.quantidade) AS total_vendido
-      FROM itens_da_venda
-      JOIN produtos ON itens_da_venda.id_produto = produtos.id
-      GROUP BY itens_da_venda.id_produto
+        p.id AS id_produto,
+        p.nome AS nome,
+        SUM(iv.quantidade) AS total_vendido
+      FROM itens_da_venda iv
+      JOIN produtos p ON iv.id_produto = p.id
+      GROUP BY p.id, p.nome
       ORDER BY total_vendido DESC
       LIMIT 1
     SQL
@@ -148,6 +192,7 @@ def produtoMaisVendido
     if produto
       sep(:simples)
       puts "Produto mais vendido:"
+      puts "ID: #{produto['id_produto']}"
       puts "Nome: #{produto['nome']}"
       puts "Quantidade vendida: #{produto['total_vendido']}"
       sep(:simples)
@@ -156,7 +201,7 @@ def produtoMaisVendido
       puts "Nenhuma venda registrada."
       sep(:simples)
     end
-    
+
   rescue SQLite3::BusyException
     puts "Erro DB 501 - DB Ocupado: O arquivo está travado"
   rescue SQLite3::SQLException => e
@@ -164,4 +209,4 @@ def produtoMaisVendido
   rescue StandardError => e
     puts "Erro inesperado: #{e.message}"
   end
-end 
+end
