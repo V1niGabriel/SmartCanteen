@@ -54,7 +54,7 @@ def listarVendas()
     JOIN clientes ON vendas.cliente_id = clientes.id
     JOIN produtos ON vendas.produto_id = produtos.id
   SQL
-
+    
   vendas.each do |venda|
     puts "id: #{venda['id']} - Cliente: #{venda['cliente_nome']} - Produto: #{venda['produto_nome']} - Data/Hora: #{venda['data_hora']}"
   end
