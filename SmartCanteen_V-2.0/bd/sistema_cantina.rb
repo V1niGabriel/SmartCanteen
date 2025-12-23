@@ -1,35 +1,35 @@
 require_relative 'dbConn'
 
-@db.execute_batch <<-SQL
+DB.execute_batch <<-SQL
   CREATE TABLE IF NOT EXISTS produtos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     nome VARCHAR(45) NOT NULL,
     tipo VARCHAR(45) NOT NULL,
     preco DECIMAL(5,2) NOT NULL
   );
 
   CREATE TABLE IF NOT EXISTS clientes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     nome VARCHAR(45) NOT NULL
   );
 
   CREATE TABLE IF NOT EXISTS cargos (
-    idcargos INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
+    idcargos INTEGER PRIMARY KEY NOT NULL,
     nome_cargo VARCHAR(50) NOT NULL
   );
 
   CREATE TABLE IF NOT EXISTS funcionarios (
-    id INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
+    id INTEGER PRIMARY KEY NOT NULL,
     nome VARCHAR(45) NOT NULL,
     CPF VARCHAR(14) NOT NULL UNIQUE,
     telefone VARCHAR(11) NOT NULL,
-    cargos_idcargos INTEGER NOT NULL, --chave estrangeira
+    cargos_idcargos INTEGER NOT NULL,
 
     FOREIGN KEY (cargos_idcargos) REFERENCES cargos(idcargos)
   );
 
   CREATE TABLE IF NOT EXISTS vendas (
-    id_venda INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_venda INTEGER PRIMARY KEY,
     data_da_compra DATETIME DEFAULT CURRENT_TIMESTAMP,
     cliente_ID INTEGER NOT NULL,
     id_vendedor INTEGER,
@@ -39,7 +39,7 @@ require_relative 'dbConn'
   );
 
   CREATE TABLE IF NOT EXISTS itens_da_venda (
-    id INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
+    id INTEGER PRIMARY KEY NOT NULL,
     id_produto INTEGER NOT NULL,
     id_venda INTEGER NOT NULL,
     quantidade INTEGER NOT NULL,

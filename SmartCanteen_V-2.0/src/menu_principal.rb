@@ -1,5 +1,5 @@
 require_relative 'menu_relatorio'
-require_relative 'models/**'
+# require_relative 'models/**'
 
 def cadastrarProduto()
   sep(:mais)

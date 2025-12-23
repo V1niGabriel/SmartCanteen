@@ -1,5 +1,16 @@
-path = File.join(__dir__, 'nome_da_pasta', '*.rb')
-
-Dir[path].each do |file|
-  require file
-end
+require_relative '../classes/cliente'
+require_relative '../classes/funcionario'
+require_relative '../classes/item_venda'
+require_relative '../classes/pessoa'
+require_relative '../classes/pessoa'
+require_relative '../classes/produto'
+require_relative '../classes/venda'
+require_relative '../classes/sessao'
+require_relative '../src/menu_principal'    
+require_relative '../src/menu_relatorio'
+require_relative '../src/utils'
+require_relative '../src/validacao'
+require_relative '../bd/dbConn'
+require_relative '../controllers/menuPrincipalController'
+require_relative '../controllers/menuRelaorioController'
+require_relative '../controllers/sistemaCotroller'

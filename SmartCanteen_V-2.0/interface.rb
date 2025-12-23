@@ -1,10 +1,6 @@
 system("cls")
 
-# require_relative 'functions/menu_principal'
-# require_relative 'functions/menu_relatorio'
-require_relative 'src/utils'
-# require_relative 'models/*'
-
+require_relative 'src/menu_principal'
 require_relative 'config/path'
 
 def inicia_sistema()
