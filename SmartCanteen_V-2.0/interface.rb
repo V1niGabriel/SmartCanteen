@@ -1,41 +1,81 @@
 system("cls")
 
-# require_relative 'functions/menu_principal'
-# require_relative 'functions/menu_relatorio'
-require_relative 'src/utils'
-# require_relative 'models/*'
-
 require_relative 'config/path'
 
 def inicia_sistema()
-  opcao = -1
-  while opcao != 0
-    sep()
-    puts "1 - Cadastrar novo Produto"
-    puts "2 - Cadastrar novo Cliente"
-    puts "3 - Registrar Venda" 
-    puts "4 - Relatórios"
-    puts "0 - Sair"
-    print "Escolha uma opção: "
-    opcao = gets.chomp.to_i
-    sep()
-    
+  logado = false
 
-    case opcao
-    when 1
-      cadastrarProduto()
-    when 2
-      cadastrarCliente()
-    when 3
-      registrarVenda()
-    when 4
-      puts "Entrando no menu de relatórios..."
-      menuRelatorios()
-    when 0
-      puts "Saindo do sistema..."
-      sep()
+  loop do
+    system("cls")
+    sep()
+    puts "🔒 LOGIN NECESSÁRIO"
+    puts "(Digite '0' no CPF para fechar o programa)"
+    sep()
+
+    print "CPF: "
+    cpf = gets.chomp
+
+    if cpf == '0'
+      puts "Saindo..."
+      return 
+    end
+
+    print "Senha: "
+    senha = gets.chomp
+
+    if login(cpf, senha)
+      puts "\n✅ Login efetuado com sucesso!"
+      sleep(1)
+      logado = true
+      break 
     else
-      puts "Opção inválida. Tente novamente."
+      puts "\n❌ Dados incorretos!"
+      puts "Tente novamente..."
+      sleep(1.5) 
+    end
+  end
+  
+  if logado
+    opcao = -1
+    while opcao != 0      
+      sep()
+      puts "MENU PRINCIPAL - Usuário: #{Sessao.atual['nome']}" 
+      sep()
+      
+      puts "1 - Cadastrar novo Produto"
+      puts "2 - Cadastrar novo Cliente"
+      puts "3 - Registrar Venda" 
+      puts "4 - Relatórios"
+      puts "5 - cadastrar novo Funcionário" if Sessao.atual['cargo'] == 'Gerente'
+      puts "0 - Sair (Logout)"
+      print "Escolha uma opção: "
+      opcao = gets.chomp.to_i
+      sep()
+
+      case opcao
+      when 1
+        cadastrarProduto()
+      when 2
+        cadastrarCliente()
+      when 3
+        registrarVenda()
+      when 4
+        puts "Entrando no menu de relatórios..."
+        menuRelatorios()
+      when 5
+        if Sessao.atual['cargo'] == 'Gerente'
+          cadastrarFuncionario()
+        else
+          puts "Opção inválida."
+        end
+      when 0
+        puts "Fazendo logout..."
+        logout()
+        sep()
+      else
+        puts "Opção inválida."
+        sleep(1)
+      end
     end
   end
 end

@@ -1,3 +1,5 @@
+require_relative '../config/path'
+
 class Produto
   attr_accessor :id, :nome, :tipo, :preco
 
@@ -9,10 +11,10 @@ class Produto
   end
 
   # Método de Classe (Estático) para salvar
-  def self.salvar(produto, db_connection)
+  def salvar()
     begin
-      db_connection.execute("INSERT INTO produtos (nome, tipo, preco) VALUES (?, ?, ?)", 
-        [produto.nome, produto.tipo, produto.preco])
+      DB.execute("INSERT INTO produtos (nome, tipo, preco) VALUES (?, ?, ?)", 
+        [@nome, @tipo, @preco])
 
       #Retorna true ao funcionar
       return true
@@ -30,6 +32,7 @@ class Produto
     end
   end
 
+  #Método de busca por id
   def self.buscar_por_id(id, db)
     row = db.get_first_row("SELECT * FROM produtos WHERE id = ?", [id])
     return row ? Produto.new(row['nome'], row['tipo'], row['preco'], row['id']) : nil

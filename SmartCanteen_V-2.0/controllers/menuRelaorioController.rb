@@ -4,9 +4,7 @@
 específico;
 3.1.2. Relatório do total de valor vendido por cada atendente em um dia específico;
 =end
-require_relative '../bd/dbConn'
-require_relative 'validacao'
-require_relative 'utils'
+require_relative '../config/path'
 require 'date'
 
 def listarClientes()

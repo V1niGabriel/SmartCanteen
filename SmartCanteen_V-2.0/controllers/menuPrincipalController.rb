@@ -1,5 +1,5 @@
-require_relative 'menu_relatorio'
-require_relative 'models/**'
+require_relative '../config/path'
+# require_relative 'models/**'
 
 def cadastrarProduto()
   sep(:mais)
@@ -36,6 +36,37 @@ def cadastrarCliente()
     sep(:simples)
 
     novo_cliente = Cliente.new(nome)
+
+    if novo_cliente.salvar(@db)
+      puts "Cliente '#{novo_cliente.nome}' cadastrado com sucesso!"
+    end
+
+  rescue StandardError => e
+    puts "Erro inesperado: #{e.message}"
+  end
+  sep(:mais)
+end
+
+def cadastrarFuncionario()
+  sep(:mais)
+  begin
+    print "Digite o nome do funcionário: "
+    nome = gets.chomp
+    sep(:simples)
+    print "Digite o CPF do funcionário: "
+    cpf = gets.chomp  
+    sep(:simples)
+    print "Digite o telefone do funcionário: "
+    telefone = gets.chomp
+    sep(:simples)
+    Cargo.getcargos()
+    print "Digite o ID do cargo do funcionário: "
+    cargo_id = gets.chomp.to_i
+    sep(:simples)
+    print "Digite a senha do funcionário: "
+    senha = gets.chomp
+
+    novo_funcionario = Funcionario.new(nome, cpf, telefone, senha)
 
     if novo_cliente.salvar(@db)
       puts "Cliente '#{novo_cliente.nome}' cadastrado com sucesso!"
