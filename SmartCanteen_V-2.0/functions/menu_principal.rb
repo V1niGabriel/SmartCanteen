@@ -1,3 +1,12 @@
+=begin
+1. Etapa 1: Alterações macro do sistema:
+1.1. Remodelar o sistema para que se adeque aos padrões da orientação a objetos,
+trabalhando com classes, objetos, herança...
+1.2. Possibilitar que funcionários sejam adicionados ao sistema
+1.2.1. Lembrem que para isso, vocês precisarão intervir no módulo de cadastro do
+sistema
+=end
+
 require_relative 'menu_relatorio'
 
 

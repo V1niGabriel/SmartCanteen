@@ -1,17 +1,3 @@
-=begin
-  5. Etapa 5: Vamos criar o “menu de opções” do nosso sistema
-5.1. Crie uma lógica (usando loop e gets.chomp) que possibilite ao usuário:
-5.1.1. "1 - Cadastrar novo Produto"
-5.1.2. "2 - Cadastrar novo Cliente"
-5.1.3. "3 - Registrar Venda"
-5.1.4. "4 – Relatórios"
-5.1.4.1. "4.1 - Listar Todos os Clientes"
-5.1.4.2. "4.2 - Listar Todos os Produtos"
-5.1.4.3. "4.3 - Listar Todas as vendas"
-5.1.4.4. 5.1.4.5. 5.1.5. "5 - Sair"
-"4.4 – Apresentar o total do valor vendido em um dia específico"
-"4.5 – Apresentar qual produto é mais vendido"
-=end
 system("cls")
 
 require_relative 'functions/menu_principal'

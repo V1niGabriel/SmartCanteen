@@ -1,3 +1,9 @@
+=begin
+3. Etapa 3: Adição de novos relatórios ao nosso sistema
+3.1.1. Relatório do total de atendimentos realizados por cada atendente em um dia
+específico;
+3.1.2. Relatório do total de valor vendido por cada atendente em um dia específico;
+=end
 require_relative '../bd/dbConn'
 require_relative 'validacao'
 require_relative 'utils'
