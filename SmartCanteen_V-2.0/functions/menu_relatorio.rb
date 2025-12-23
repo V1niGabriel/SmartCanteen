@@ -226,3 +226,28 @@ def produtoMaisVendido
   end
 end
 
+def atendimentosPorFuncionarioDia(data)
+    query = <<-SQL
+      SELECT f.nome, c.nome_cargo, COUNT(v.id_venda) as qtd
+      FROM vendas v JOIN funcionarios f ON v.id_vendedor = f.id
+      JOIN cargos c ON f.cargos_idcargos = c.idcargos
+      WHERE v.data_da_compra BETWEEN ? AND ? GROUP BY f.id ORDER BY qtd DESC
+    SQL
+    
+    res = @db.execute(query, [data.strftime("%Y-%m-%d 00:00:00"), data.strftime("%Y-%m-%d 23:59:59")])
+    puts "ATENDIMENTOS EM #{data.strftime('%d/%m/%Y')}".center(50); sep(:traco)
+    res.each { |r| printf("| %-20s | %-12s | %3d vendas |\n", r['nome'], r['nome_cargo'], r['qtd']) }
+end
+
+def valorVendidoPorFuncionarioDia(data)
+    query = <<-SQL
+      SELECT f.nome, SUM(iv.quantidade * p.preco) as total
+      FROM vendas v JOIN itens_da_venda iv ON v.id_venda = iv.id_venda
+      JOIN produtos p ON iv.id_produto = p.id JOIN funcionarios f ON v.id_vendedor = f.id
+      WHERE v.data_da_compra BETWEEN ? AND ? GROUP BY f.id ORDER BY total DESC
+    SQL
+
+    res = @db.execute(query, [data.strftime("%Y-%m-%d 00:00:00"), data.strftime("%Y-%m-%d 23:59:59")])
+    puts "FATURAMENTO POR ATENDENTE - #{data.strftime('%d/%m/%Y')}".center(50); sep(:traco)
+    res.each { |r| printf("| %-25s | R$ %9.2f |\n", r['nome'], r['total']) }
+end

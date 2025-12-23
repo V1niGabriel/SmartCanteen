@@ -48,6 +48,8 @@ def menuRelatorios()
     puts "3 - Listar Todas as Vendas"
     puts "4 - Total do valor vendido em um dia específico"
     puts "5 - Produto mais vendido"
+    puts "6 - Total de atendimentos realizados por cada atendente em um dia específico"
+    puts "7 - Total de valor vendido por cada atendente em um dia específico"
     puts "0 - Voltar ao menu principal"
     print "Escolha uma opção: "
     opcaoRelatorio = gets.chomp.to_i
@@ -67,6 +69,20 @@ def menuRelatorios()
       totalVendasDia(data_valida)
     when 5
       produtoMaisVendido()
+    when 6
+    print "Digite a data para o relatório (DD-MM-AAAA): "
+    data_input = gets.chomp
+    data_valida = validarData(data_input)
+    if data_valida
+      atendimentosPorFuncionarioDia(data_valida)
+    end
+    when 7
+    print "Digite a data para o relatório (DD-MM-AAAA): "
+    data_input = gets.chomp
+    data_valida = validarData(data_input)
+    if data_valida
+      valorVendidoPorFuncionarioDia(data_valida)
+    end
     when 0
       puts "Retornando ao menu principal..."
       return
