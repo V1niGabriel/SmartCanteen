@@ -100,7 +100,7 @@ def menuRelatorios()
   opcaoRelatorio = -1
   while opcaoRelatorio != 0
     sep()
-    opcaoRelatorio = prompt.select("Menu de Relatórios", opcoes_relatorio, per_page: 10)
+    opcaoRelatorio = prompt.select("Menu de Relatórios:", opcoes_relatorio, per_page: 10)
     sep()
     
     case opcaoRelatorio

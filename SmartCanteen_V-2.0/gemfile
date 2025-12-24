@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+
+# Base de dados utilizada no projeto
+gem 'sqlite3'
+
+# Interface interativa para os menus (causa do erro anterior)
+gem 'tty-prompt'
