@@ -11,11 +11,7 @@ class Produto
   end
 
   # Método de Classe (Estático) para salvar
-<<<<<<< HEAD
-  def salvar()
-=======
   def salvar
->>>>>>> bea5fcd3dd455b07d748961fbdf6179d168c7ae1
     begin
       DB.execute("INSERT INTO produtos (nome, tipo, preco) VALUES (?, ?, ?)", 
         [@nome, @tipo, @preco])
@@ -37,13 +33,8 @@ class Produto
   end
 
   #Método de busca por id
-<<<<<<< HEAD
-  def self.buscar_por_id(id, db)
-    row = db.get_first_row("SELECT * FROM produtos WHERE id = ?", [id])
-=======
   def self.buscar_por_id(id)
     row = DB.get_first_row("SELECT * FROM produtos WHERE id = ?", [id])
->>>>>>> bea5fcd3dd455b07d748961fbdf6179d168c7ae1
     return row ? Produto.new(row['nome'], row['tipo'], row['preco'], row['id']) : nil
   end
 end
