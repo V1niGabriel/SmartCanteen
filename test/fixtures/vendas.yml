@@ -1,0 +1,7 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  data_da_compra: 2026-02-27 16:12:40
+
+two:
+  data_da_compra: 2026-02-27 16:12:40

@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  resources :itens_da_vendas
+  resources :vendas
+  resources :funcionarios
+  resources :cargos
+  resources :clientes
+  resources :produtos
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
