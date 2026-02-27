@@ -1,3 +1,3 @@
 class Cliente < ApplicationRecord
-  has_many :venda
+  has_many :vendas
 end

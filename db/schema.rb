@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_27_201704) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_27_210409) do
   create_table "cargos", force: :cascade do |t|
     t.string "nome_cargo"
   end
@@ -20,14 +20,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_27_201704) do
   end
 
   create_table "funcionarios", force: :cascade do |t|
+    t.integer "cargo_id"
     t.string "cpf"
     t.string "nome"
     t.string "telefone"
+    t.index ["cargo_id"], name: "index_funcionarios_on_cargo_id"
   end
 
   create_table "itens_da_vendas", force: :cascade do |t|
     t.decimal "precounitario"
+    t.integer "produto_id", null: false
     t.integer "quantidade"
+    t.index ["produto_id"], name: "index_itens_da_vendas_on_produto_id"
   end
 
   create_table "produtos", force: :cascade do |t|
@@ -39,8 +43,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_27_201704) do
   create_table "vendas", force: :cascade do |t|
     t.integer "cliente_id", null: false
     t.datetime "data_da_compra"
+    t.integer "funcionario_id", null: false
     t.index ["cliente_id"], name: "index_vendas_on_cliente_id"
+    t.index ["funcionario_id"], name: "index_vendas_on_funcionario_id"
   end
 
+  add_foreign_key "funcionarios", "cargos"
+  add_foreign_key "itens_da_vendas", "produtos"
   add_foreign_key "vendas", "clientes"
+  add_foreign_key "vendas", "funcionarios"
 end
