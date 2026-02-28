@@ -1,0 +1,36 @@
+<h2>Cadastrar</h2>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  <%= render "funcionarios/shared/error_messages", resource: resource %>
+
+  <div class="field">
+    <p><%= f.label :cpf, "CPF" %></p>
+    <p><%= f.text_field :cpf, autofocus: true, autocomplete: "off", maxlength: 11, inputmode: "numeric", oninput: "this.value = this.value.replace(/\\D/g, '')" %></p>
+  </div>
+
+  <div class="field">
+    <p><%= f.label :nome, "Nome" %></p>
+    <p><%= f.text_field :nome %></p>
+  </div>
+
+  <div class="field">
+    <p><%= f.label :telefone, "Telefone" %></p>
+    <p><%= f.telephone_field :telefone, maxlength: 11, oninput: "this.value = this.value.replace(/\\D/g, '')" %></p>
+  </div>
+
+  <div class="field">
+    <p><%= f.label :password, "Senha" %></p>
+    <p><%= f.password_field :password, autocomplete: "new-password" %></p>
+  </div>
+
+  <div class="field">
+    <p><%= f.label :password_confirmation, "Confirmar senha" %></p>
+    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Cadastrar" %>
+  </div>
+<% end %>
+
+<%= render "funcionarios/shared/links" %>

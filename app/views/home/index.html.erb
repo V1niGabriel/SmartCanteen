@@ -1,0 +1,14 @@
+<% content_for :title, "Cantina Tech - Início" %>
+
+<h1>Cantina Tech</h1>
+<p>Bem-vindo, <strong><%= current_funcionario.nome %></strong>!</p>
+
+<h2>Menu</h2>
+<ul>
+  <li><%= link_to "Produtos", produtos_path %></li>
+  <li><%= link_to "Clientes", clientes_path %></li>
+  <li><%= link_to "Cargos", cargos_path %></li>
+  <li><%= link_to "Funcionários", funcionarios_path %></li>
+  <li><%= link_to "Vendas", vendas_path %></li>
+  <li><%= link_to "Itens da Venda", itens_da_vendas_path %></li>
+</ul>

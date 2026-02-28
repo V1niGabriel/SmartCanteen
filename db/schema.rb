@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_28_162947) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_28_222442) do
   create_table "cargos", force: :cascade do |t|
     t.string "nome_cargo"
   end
@@ -22,9 +22,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_162947) do
   create_table "funcionarios", force: :cascade do |t|
     t.integer "cargo_id"
     t.string "cpf"
+    t.string "encrypted_password", default: "", null: false
     t.string "nome"
+    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
     t.string "telefone"
     t.index ["cargo_id"], name: "index_funcionarios_on_cargo_id"
+    t.index ["reset_password_token"], name: "index_funcionarios_on_reset_password_token", unique: true
   end
 
   create_table "itens_da_vendas", force: :cascade do |t|
