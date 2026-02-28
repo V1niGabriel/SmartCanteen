@@ -1,7 +1,23 @@
 <div id="<%= dom_id itens_da_venda %>">
   <div>
+    <strong>Venda:</strong>
+    <%= itens_da_venda.venda_id %>
+  </div>
+
+  <div>
+    <strong>Produto:</strong>
+    <%= itens_da_venda.produto.nome %>
+  </div>
+
+  <div>
+    <strong>Preço Unitário:</strong>
+    <%= number_to_currency(itens_da_venda.precounitario, unit: "R$ ", separator: ",", delimiter: ".") %>
+  </div>
+
+  <div>
     <strong>Quantidade:</strong>
     <%= itens_da_venda.quantidade %>
   </div>
 
 </div>
+

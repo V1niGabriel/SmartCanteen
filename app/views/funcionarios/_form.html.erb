@@ -12,6 +12,11 @@
   <% end %>
 
   <div>
+    <%= form.label :cargo_id, "Cargo", style: "display: block" %>
+    <%= form.collection_select :cargo_id, @cargos, :id, :nome_cargo, prompt: "Selecione um cargo" %>
+  </div>
+
+  <div>
     <%= form.label :nome, style: "display: block" %>
     <%= form.text_field :nome %>
   </div>

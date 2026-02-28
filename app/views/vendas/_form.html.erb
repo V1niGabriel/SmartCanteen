@@ -12,6 +12,16 @@
   <% end %>
 
   <div>
+    <%= form.label :cliente_id, "Cliente", style: "display: block" %>
+    <%= form.collection_select :cliente_id, @clientes, :id, :nome, prompt: "Selecione um cliente" %>
+  </div>
+
+  <div>
+    <%= form.label :funcionario_id, "Funcionário", style: "display: block" %>
+    <%= form.collection_select :funcionario_id, @funcionarios, :id, :nome, prompt: "Selecione um funcionário" %>
+  </div>
+
+  <div>
     <%= form.label :data_da_compra, style: "display: block" %>
     <%= form.datetime_field :data_da_compra %>
   </div>

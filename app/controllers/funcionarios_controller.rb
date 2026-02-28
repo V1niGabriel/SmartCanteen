@@ -1,5 +1,6 @@
 class FuncionariosController < ApplicationController
   before_action :set_funcionario, only: %i[ show edit update destroy ]
+  before_action :set_cargos, only: %i[ new edit create update ]
 
   # GET /funcionarios or /funcionarios.json
   def index
@@ -63,8 +64,12 @@ class FuncionariosController < ApplicationController
       @funcionario = Funcionario.find(params.expect(:id))
     end
 
+    def set_cargos
+      @cargos = Cargo.all
+    end
+
     # Only allow a list of trusted parameters through.
     def funcionario_params
-      params.expect(funcionario: [ :nome, :cpf, :telefone ])
+      params.expect(funcionario: [ :cargo_id, :nome, :cpf, :telefone ])
     end
 end

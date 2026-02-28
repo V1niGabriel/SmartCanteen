@@ -12,6 +12,16 @@
   <% end %>
 
   <div>
+    <%= form.label :venda_id, "Venda", style: "display: block" %>
+    <%= form.collection_select :venda_id, @vendas, :id, :id, prompt: "Selecione uma venda" %>
+  </div>
+
+  <div>
+    <%= form.label :produto_id, "Produto", style: "display: block" %>
+    <%= form.collection_select :produto_id, @produtos, :id, :nome, prompt: "Selecione um produto" %>
+  </div>
+
+  <div>
     <%= form.label :quantidade, style: "display: block" %>
     <%= form.number_field :quantidade %>
   </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_27_210409) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_28_162947) do
   create_table "cargos", force: :cascade do |t|
     t.string "nome_cargo"
   end
@@ -31,7 +31,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_27_210409) do
     t.decimal "precounitario"
     t.integer "produto_id", null: false
     t.integer "quantidade"
+    t.integer "venda_id", null: false
     t.index ["produto_id"], name: "index_itens_da_vendas_on_produto_id"
+    t.index ["venda_id"], name: "index_itens_da_vendas_on_venda_id"
   end
 
   create_table "produtos", force: :cascade do |t|
@@ -50,6 +52,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_27_210409) do
 
   add_foreign_key "funcionarios", "cargos"
   add_foreign_key "itens_da_vendas", "produtos"
+  add_foreign_key "itens_da_vendas", "vendas"
   add_foreign_key "vendas", "clientes"
   add_foreign_key "vendas", "funcionarios"
 end

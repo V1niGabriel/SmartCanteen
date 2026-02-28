@@ -1,5 +1,6 @@
 class ItensDaVendasController < ApplicationController
   before_action :set_itens_da_venda, only: %i[ show edit update destroy ]
+  before_action :set_form_collections, only: %i[ new edit create update ]
 
   # GET /itens_da_vendas or /itens_da_vendas.json
   def index
@@ -22,6 +23,7 @@ class ItensDaVendasController < ApplicationController
   # POST /itens_da_vendas or /itens_da_vendas.json
   def create
     @itens_da_venda = ItensDaVenda.new(itens_da_venda_params)
+    @itens_da_venda.precounitario = @itens_da_venda.produto&.preco
 
     respond_to do |format|
       if @itens_da_venda.save
@@ -63,8 +65,13 @@ class ItensDaVendasController < ApplicationController
       @itens_da_venda = ItensDaVenda.find(params.expect(:id))
     end
 
+    def set_form_collections
+      @vendas = Venda.all
+      @produtos = Produto.all
+    end
+
     # Only allow a list of trusted parameters through.
     def itens_da_venda_params
-      params.expect(itens_da_venda: [ :quantidade ])
+      params.expect(itens_da_venda: [ :venda_id, :produto_id, :quantidade ])
     end
 end

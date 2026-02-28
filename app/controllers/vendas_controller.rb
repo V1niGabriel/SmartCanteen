@@ -1,5 +1,6 @@
 class VendasController < ApplicationController
   before_action :set_venda, only: %i[ show edit update destroy ]
+  before_action :set_form_collections, only: %i[ new edit create update ]
 
   # GET /vendas or /vendas.json
   def index
@@ -63,8 +64,13 @@ class VendasController < ApplicationController
       @venda = Venda.find(params.expect(:id))
     end
 
+    def set_form_collections
+      @clientes = Cliente.all
+      @funcionarios = Funcionario.all
+    end
+
     # Only allow a list of trusted parameters through.
     def venda_params
-      params.expect(venda: [ :data_da_compra ])
+      params.expect(venda: [ :cliente_id, :funcionario_id, :data_da_compra ])
     end
 end
