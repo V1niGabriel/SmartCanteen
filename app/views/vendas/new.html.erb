@@ -1,11 +1,10 @@
-<% content_for :title, "New venda" %>
+<% content_for :title, "Nova Venda" %>
 
-<h1>New venda</h1>
+<div class="main-card-container">
+  <div class="page-header-row">
+    <h1>Nova Venda</h1>
+    <%= link_to "Voltar para vendas", vendas_path, class: "new-prod-btn", style: "background-color: #6b8e23;" %>
+  </div>
 
-<%= render "form", venda: @venda %>
-
-<br>
-
-<div>
-  <%= link_to "Back to vendas", vendas_path %>
+  <%= render "form", venda: @venda %>
 </div>

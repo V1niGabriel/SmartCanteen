@@ -1,10 +1,80 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Detalhes da Venda" %>
 
-<%= render @venda %>
+<div class="main-card-container">
+  <div class="page-header-row">
+    <h1>Comprovante da Venda #<%= @venda.id %></h1>
+    <div style="display: flex; gap: 10px;">
+      <% if can?(:update, @venda) %>
+        <%= link_to "Editar Venda", edit_venda_path(@venda), class: "new-prod-btn", style: "background-color: #ffc107; color: #333;" %>
+      <% end %>
+      <%= link_to "Voltar", vendas_path, class: "new-prod-btn", style: "background-color: #B78F7A;" %>
+    </div>
+  </div>
 
-<div>
-  <%= link_to "Edit this venda", edit_venda_path(@venda) %> |
-  <%= link_to "Back to vendas", vendas_path %>
+  <div class="venda-layout-grid" style="display: grid; grid-template-columns: 350px 1fr; gap: 40px; align-items: start; margin-top: 20px;">
+    
+    <!-- COLUNA DA ESQUERDA: DADOS GERAIS -->
+    <div class="venda-left-column" style="background: #fcfcfc; padding: 25px; border-radius: 8px; border: 1px solid #eaeaea; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+      <h3 style="color: #003247; margin-top: 0; margin-bottom: 25px; font-size: 1.2rem; border-bottom: 2px solid #eaeaea; padding-bottom: 10px;">Informações Principais</h3>
+      
+      <div style="margin-bottom: 20px;">
+        <strong style="display: block; font-weight: 600; color: #555; margin-bottom: 5px;">Cliente</strong>
+        <p style="margin: 0; padding: 10px; background: #fff; border: 1px solid #eee; border-radius: 4px; color: #333;"><%= @venda.cliente&.nome %></p>
+      </div>
 
-  <%= button_to "Destroy this venda", @venda, method: :delete %>
+      <div style="margin-bottom: 20px;">
+        <strong style="display: block; font-weight: 600; color: #555; margin-bottom: 5px;">Funcionário (Vendedor)</strong>
+        <p style="margin: 0; padding: 10px; background: #fff; border: 1px solid #eee; border-radius: 4px; color: #333;"><%= @venda.funcionario&.nome %></p>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <strong style="display: block; font-weight: 600; color: #555; margin-bottom: 5px;">Data e Hora da Compra</strong>
+        <p style="margin: 0; padding: 10px; background: #fff; border: 1px solid #eee; border-radius: 4px; color: #333;"><%= @venda.data_da_compra.strftime("%d/%m/%Y %H:%M") if @venda.data_da_compra %></p>
+      </div>
+    </div>
+
+    <!-- COLUNA DA DIREITA: CARRINHO VISUAL -->
+    <div class="venda-right-column">
+      <h3 style="color: #003247; margin-top: 0; margin-bottom: 20px; font-size: 1.2rem; border-bottom: 2px solid #eaeaea; padding-bottom: 10px;">Itens da Venda</h3>
+
+      <!-- Tabela do carrinho (Somente leitura) -->
+      <table class="cart-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead style="background-color: #fcfcfc; border-bottom: 2px solid #eaeaea;">
+          <tr>
+            <th style="padding: 12px 10px; color: #003247; font-weight: 600;">Produto</th>
+            <th style="padding: 12px 10px; color: #003247; font-weight: 600;">Qtd</th>
+            <th style="padding: 12px 10px; color: #003247; font-weight: 600;">Unitário</th>
+            <th style="padding: 12px 10px; color: #003247; font-weight: 600;">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @venda.itens_da_venda.each do |item| %>
+            <tr class="item-carrinho" style="border-bottom: 1px solid #f0f0f0;">
+              <td style="padding: 15px 10px; color: #555;">
+                <%= item.produto.nome %>
+              </td>
+              <td style="padding: 15px 10px;">
+                <%= item.quantidade %>
+              </td>
+              <td style="padding: 15px 10px;">
+                R$ <%= number_to_currency(item.precounitario, unit: "", separator: ",", delimiter: ".") %>
+              </td>
+              <td style="padding: 15px 10px; font-weight: 500;">
+                R$ <%= number_to_currency(item.precounitario * item.quantidade, unit: "", separator: ",", delimiter: ".") %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" style="text-align: right; padding-top: 20px; font-weight: bold; color: #003247;">Total da Venda:</td>
+            <td style="padding-top: 20px; font-weight: bold; font-size: 1.2rem; color: #B78F7A; padding-left: 10px;">
+              R$ <%= number_to_currency(@venda.valor_total, unit: "", separator: ",", delimiter: ".") %>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+
+    </div>
+  </div>
 </div>

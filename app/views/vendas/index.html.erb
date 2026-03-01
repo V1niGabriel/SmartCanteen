@@ -1,16 +1,41 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Vendas" %>
 
-<h1>Vendas</h1>
+<div class="main-card-container">
+  <div class="page-header-row">
+    <h1>Histórico de Vendas</h1>
+    <%= link_to "Nova Venda", new_venda_path, class: "new-prod-btn" %>
+  </div>
 
-<div id="vendas">
-  <% @vendas.each do |venda| %>
-    <%= render venda %>
-    <p>
-      <%= link_to "Show this venda", venda %>
-    </p>
-  <% end %>
+  <table class="styled-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+    <thead style="background-color: #f8f9fa;">
+      <tr>
+        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #eaeaea;">Data e Hora</th>
+        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #eaeaea;">Cliente</th>
+        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #eaeaea;">Vendedor</th>
+        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #eaeaea;">Total da Venda</th>
+        <th style="padding: 12px; text-align: center; border-bottom: 2px solid #eaeaea;">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @vendas.each do |venda| %>
+        <tr style="border-bottom: 1px solid #f0f0f0;">
+          <td style="padding: 12px;"><%= venda.data_da_compra.strftime("%d/%m/%Y %H:%M") if venda.data_da_compra %></td>
+          <td style="padding: 12px;"><%= venda.cliente&.nome %></td>
+          <td style="padding: 12px;"><%= venda.funcionario&.nome %></td>
+          <td style="padding: 12px; font-weight: bold; color: #6b8e23;">R$ <%= number_to_currency(venda.valor_total, unit: "", separator: ",", delimiter: ".") %></td>
+          <td style="padding: 12px; text-align: center;">
+            <div style="display: flex; gap: 10px; justify-content: center;">
+              <%= link_to "Ver", venda, style: "color: #007bff; text-decoration: none; font-weight: 500;" %>
+              <% if can?(:update, venda) %>
+                <%= link_to "Editar", edit_venda_path(venda), style: "color: #ffc107; text-decoration: none; font-weight: 500;" %>
+              <% end %>
+              <% if can?(:destroy, venda) %>
+                <%= button_to "Excluir", venda, method: :delete, data: { turbo_confirm: "Tem certeza?" }, style: "background: none; border: none; color: #dc3545; cursor: pointer; text-decoration: none; font-weight: 500; padding: 0;" %>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>
-
-<%= link_to "New venda", new_venda_path %>

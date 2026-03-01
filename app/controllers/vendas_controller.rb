@@ -23,6 +23,7 @@ class VendasController < ApplicationController
   # POST /vendas or /vendas.json
   def create
     @venda = Venda.new(venda_params)
+    @venda.funcionario = current_funcionario
 
     respond_to do |format|
       if @venda.save
@@ -67,10 +68,16 @@ class VendasController < ApplicationController
     def set_form_collections
       @clientes = Cliente.all
       @funcionarios = Funcionario.all
+      @produtos = Produto.all
     end
 
     # Only allow a list of trusted parameters through.
     def venda_params
-      params.expect(venda: [ :cliente_id, :funcionario_id, :data_da_compra ])
+      params.require(:venda).permit(
+        :cliente_id, 
+        :funcionario_id, 
+        :data_da_compra, 
+        itens_da_venda_attributes: [:id, :produto_id, :quantidade, :precounitario, :_destroy]
+      )
     end
 end

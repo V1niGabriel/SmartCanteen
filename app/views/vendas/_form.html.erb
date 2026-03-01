@@ -1,7 +1,7 @@
 <%= form_with(model: venda) do |form| %>
   <% if venda.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(venda.errors.count, "error") %> prohibited this venda from being saved:</h2>
+    <div style="color: red; margin-bottom: 20px;">
+      <h2><%= pluralize(venda.errors.count, "erro") %> proibiram esta venda de ser salva:</h2>
 
       <ul>
         <% venda.errors.each do |error| %>
@@ -11,22 +11,235 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :cliente_id, "Cliente", style: "display: block" %>
-    <%= form.collection_select :cliente_id, @clientes, :id, :nome, prompt: "Selecione um cliente" %>
-  </div>
+  <div class="venda-layout-grid" style="display: grid; grid-template-columns: 350px 1fr; gap: 40px; align-items: start;">
+    
+    <!-- COLUNA DA ESQUERDA: DADOS GERAIS -->
+    <div class="venda-left-column" style="background: #fcfcfc; padding: 25px; border-radius: 8px; border: 1px solid #eaeaea; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+      <h3 style="color: #003247; margin-top: 0; margin-bottom: 25px; font-size: 1.2rem; border-bottom: 2px solid #eaeaea; padding-bottom: 10px;">Detalhes da Venda</h3>
 
-  <div>
-    <%= form.label :funcionario_id, "Funcionário", style: "display: block" %>
-    <%= form.collection_select :funcionario_id, @funcionarios, :id, :nome, prompt: "Selecione um funcionário" %>
-  </div>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <%= form.label :cliente_id, "Cliente", style: "display: block; font-weight: 600; color: #555; margin-bottom: 8px;" %>
+        <%= form.collection_select :cliente_id, @clientes, :id, :nome, { prompt: "Selecione um cliente" }, { style: "width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 1rem; box-sizing: border-box;" } %>
+      </div>
 
-  <div>
-    <%= form.label :data_da_compra, style: "display: block" %>
-    <%= form.datetime_field :data_da_compra %>
-  </div>
+      <!-- O funcionário é garantido de forma oculta pelo Devise -->
+      <%= form.hidden_field :funcionario_id, value: current_funcionario.id %>
 
-  <div>
-    <%= form.submit %>
+      <div class="form-group" style="margin-bottom: 30px;">
+        <%= form.label :data_da_compra, "Data e Hora da Compra", style: "display: block; font-weight: 600; color: #555; margin-bottom: 8px;" %>
+        <%= form.datetime_field :data_da_compra, style: "width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 1rem; box-sizing: border-box;" %>
+      </div>
+      
+      <div class="form-actions" style="display: flex; flex-direction: column; gap: 10px;">
+        <%= form.submit "Salvar Venda", style: "width: 100%; padding: 12px; border-radius: 6px; border: none; background-color: #B78F7A; color: white; font-weight: bold; font-size: 1rem; cursor: pointer;" %>
+        <%= link_to "Cancelar", vendas_path, style: "text-align: center; color: #777; text-decoration: none; font-weight: 500;" %>
+      </div>
+    </div>
+
+    <!-- COLUNA DA DIREITA: CARRINHO VISUAL -->
+    <div class="venda-right-column">
+      <h3 style="color: #003247; margin-top: 0; margin-bottom: 20px; font-size: 1.2rem; border-bottom: 2px solid #eaeaea; padding-bottom: 10px;">Carrinho de Compras</h3>
+      
+      <!-- Controles para adicionar produto -->
+      <div class="cart-controls" style="display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-end; background: #fcfcfc; padding: 20px; border-radius: 8px; border: 1px solid #eaeaea;">
+        <div style="flex: 2;">
+          <label style="display: block; font-weight: 600; color: #555; margin-bottom: 8px;">Adicionar Produto</label>
+          <select id="produto-select" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 1rem;">
+            <option value="">Selecione um produto</option>
+            <% @produtos.each do |produto| %>
+              <option value="<%= produto.id %>" data-nome="<%= produto.nome %>" data-preco="<%= produto.preco %>">
+                <%= produto.nome %> - R$ <%= number_to_currency(produto.preco, unit: "", separator: ",", delimiter: ".") %>
+              </option>
+            <% end %>
+          </select>
+        </div>
+        <div style="flex: 1;">
+          <label style="display: block; font-weight: 600; color: #555; margin-bottom: 8px;">Quantidade</label>
+          <input type="number" id="quantidade-input" value="1" min="1" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 1rem;">
+        </div>
+        <div>
+          <button type="button" id="btn-add-produto" style="background-color: #6b8e23; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">+ Add</button>
+        </div>
+      </div>
+
+      <!-- Tabela do carrinho -->
+      <table class="cart-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead style="background-color: #fcfcfc; border-bottom: 2px solid #eaeaea;">
+          <tr>
+            <th style="padding: 12px 10px; color: #003247; font-weight: 600;">Produto</th>
+            <th style="padding: 12px 10px; color: #003247; font-weight: 600;">Qtd</th>
+            <th style="padding: 12px 10px; color: #003247; font-weight: 600;">Unitário</th>
+            <th style="padding: 12px 10px; color: #003247; font-weight: 600;">Subtotal</th>
+            <th style="padding: 12px 10px;"></th>
+          </tr>
+        </thead>
+        <tbody id="tabela-itens">
+          <!-- Se estamos na view Edit, mostrar os itens já existentes -->
+          <% venda.itens_da_venda.each do |item| %>
+            <% if item.persisted? && !item.marked_for_destruction? %>
+              <tr class="item-carrinho" style="border-bottom: 1px solid #f0f0f0;">
+                <td style="padding: 15px 10px; color: #555;">
+                  <%= item.produto.nome %>
+                  <input type="hidden" name="venda[itens_da_venda_attributes][<%= item.id %>][id]" value="<%= item.id %>" />
+                  <input type="hidden" name="venda[itens_da_venda_attributes][<%= item.id %>][produto_id]" value="<%= item.produto_id %>" />
+                </td>
+                <td style="padding: 15px 10px;">
+                  <%= item.quantidade %>
+                  <input type="hidden" class="qtd-input" name="venda[itens_da_venda_attributes][<%= item.id %>][quantidade]" value="<%= item.quantidade %>" />
+                </td>
+                <td style="padding: 15px 10px;">
+                  R$ <%= number_to_currency(item.precounitario, unit: "", separator: ",", delimiter: ".") %>
+                  <input type="hidden" class="preco-input" name="venda[itens_da_venda_attributes][<%= item.id %>][precounitario]" value="<%= item.precounitario %>" />
+                </td>
+                <td style="padding: 15px 10px;">
+                  R$ <%= number_to_currency(item.precounitario * item.quantidade, unit: "", separator: ",", delimiter: ".") %>
+                </td>
+                <td style="padding: 15px 10px; text-align: right;">
+                  <button type="button" class="btn-cancelar js-remover-item" style="background-color: transparent; color: #B78F7A; border: 1px solid #B78F7A; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Remover</button>
+                  <input type="hidden" class="destroy-input" name="venda[itens_da_venda_attributes][<%= item.id %>][_destroy]" value="0" />
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" style="text-align: right; padding-top: 20px; font-weight: bold; color: #003247;">Total da Venda:</td>
+            <td colspan="2" style="padding-top: 20px; font-weight: bold; font-size: 1.2rem; color: #B78F7A; padding-left: 10px;">
+              R$ <span id="total-venda">0,00</span>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+
+    </div>
   </div>
 <% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btnAdd = document.getElementById("btn-add-produto");
+    const tabelaItens = document.getElementById("tabela-itens");
+    const totalVendaSpan = document.getElementById("total-venda");
+    const produtoSelect = document.getElementById("produto-select");
+    const quantidadeInput = document.getElementById("quantidade-input");
+
+    // Função para calcular e atualizar o total visual no form
+    function atualizarTotal() {
+      let total = 0;
+      const linhas = tabelaItens.querySelectorAll("tr.item-carrinho");
+
+      linhas.forEach(linha => {
+        // Apenas soma se a linha não foi "escondida" (deletada)
+        if (linha.style.display !== "none") {
+          const precoInput = linha.querySelector(".preco-input");
+          const qtdInput = linha.querySelector(".qtd-input");
+
+          if (precoInput && qtdInput) {
+            const preco = parseFloat(precoInput.value) || 0;
+            const qtd = parseInt(qtdInput.value) || 0;
+            total += (preco * qtd);
+          }
+        }
+      });
+
+      // Formatar formato de moeda brasileiro manualmente
+      totalVendaSpan.textContent = total.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // Inicializa o total se for tela de Edit
+    atualizarTotal();
+
+    // Adição de novo Produto ao Carrinho
+    if (btnAdd) {
+      btnAdd.addEventListener("click", () => {
+        const option = produtoSelect.options[produtoSelect.selectedIndex];
+
+        if (!option.value) {
+          alert("Por favor, selecione um produto.");
+          return;
+        }
+
+        const produtoId = option.value;
+        const produtoNome = option.dataset.nome;
+        const precoUnitario = parseFloat(option.dataset.preco) || 0;
+        const quantidade = parseInt(quantidadeInput.value) || 0;
+
+        if (quantidade <= 0) {
+          alert("Por favor, insira uma quantidade válida.");
+          return;
+        }
+
+        const subtotal = precoUnitario * quantidade;
+
+        // Gerar um timestamp único para o array do Rails (ex: itens_da_venda_attributes[162489110...])
+        const uniqueId = new Date().getTime();
+
+        // Template string do HTML da Linha da Tabela formatado
+        const novaLinhaHTML = `
+          <tr class="item-carrinho" style="border-bottom: 1px solid #f0f0f0;">
+            <td style="padding: 15px 10px; color: #555;">
+              ${produtoNome}
+              <input type="hidden" name="venda[itens_da_venda_attributes][${uniqueId}][produto_id]" value="${produtoId}" />
+            </td>
+            <td style="padding: 15px 10px;">
+              ${quantidade}
+              <input type="hidden" class="qtd-input" name="venda[itens_da_venda_attributes][${uniqueId}][quantidade]" value="${quantidade}" />
+            </td>
+            <td style="padding: 15px 10px;">
+              R$ ${precoUnitario.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              <input type="hidden" class="preco-input" name="venda[itens_da_venda_attributes][${uniqueId}][precounitario]" value="${precoUnitario}" />
+            </td>
+            <td style="padding: 15px 10px;">
+              R$ ${subtotal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </td>
+            <td style="padding: 15px 10px; text-align: right;">
+              <button type="button" class="btn-cancelar js-remover-item" style="background-color: transparent; color: #B78F7A; border: 1px solid #B78F7A; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Remover</button>
+              <input type="hidden" class="destroy-input" name="venda[itens_da_venda_attributes][${uniqueId}][_destroy]" value="0" />
+            </td>
+          </tr>
+        `;
+
+        // Retiramos a linha "placeholder" (Design Temporário) se ela existir para inserir itens reais
+        const placeholder = tabelaItens.querySelector("tr td i");
+        if (placeholder) {
+          tabelaItens.innerHTML = "";
+        }
+
+        // Insere a nova linha no Carrinho
+        tabelaItens.insertAdjacentHTML('beforeend', novaLinhaHTML);
+        
+        // Atualiza a matemática visual
+        atualizarTotal();
+
+        // Reseta os campos para novos itens
+        produtoSelect.value = "";
+        quantidadeInput.value = "1";
+      });
+    }
+
+    // Delegação de evento de clique para o botão "Remover" das linhas (já que as linhas são geradas dinâmicamente)
+    if (tabelaItens) {
+      tabelaItens.addEventListener("click", function (e) {
+        if (e.target && e.target.classList.contains("js-remover-item")) {
+          e.preventDefault();
+          const linha = e.target.closest("tr");
+          const destroyInput = linha.querySelector(".destroy-input");
+
+          // Verifica se o item já existia no banco pelo Input _destroy
+          if (destroyInput && destroyInput.name.indexOf(linha.querySelector("input[name*='[id]']") ? "1" : "new_record") !== -1) {
+             // Se for item antigo já com ID, oculta a linha e seta destroy pra 1
+             destroyInput.value = "1";
+             linha.style.display = "none";
+          } else {
+             // Se for novo (adicionado agora no template), apenas o excluímos da interface (do DOM)
+             linha.remove();
+          }
+
+          atualizarTotal();
+        }
+      });
+    }
+
+  });
+</script>
