@@ -5,9 +5,9 @@
     <h1>Comprovante da Venda #<%= @venda.id %></h1>
     <div style="display: flex; gap: 10px;">
       <% if can?(:update, @venda) %>
-        <%= link_to "Editar Venda", edit_venda_path(@venda), class: "new-prod-btn", style: "background-color: #ffc107; color: #333;" %>
+        <%= link_to "Editar Venda", edit_venda_path(@venda), class: "new-prod-btn", style: "background-color: #6b8e23; color: white;" %>
       <% end %>
-      <%= link_to "Voltar", vendas_path, class: "new-prod-btn", style: "background-color: #B78F7A;" %>
+      <%= link_to "Voltar", vendas_path, class: "new-prod-btn", style: "background-color: #B78F7A; color: white;" %>
     </div>
   </div>
 

@@ -77,21 +77,20 @@
           <!-- Se estamos na view Edit, mostrar os itens já existentes -->
           <% venda.itens_da_venda.each do |item| %>
             <% if item.persisted? && !item.marked_for_destruction? %>
-              <tr class="item-carrinho" style="border-bottom: 1px solid #f0f0f0;">
+              <tr class="item-carrinho" style="border-bottom: 1px solid #f0f0f0;" data-produto-id="<%= item.produto_id %>">
                 <td style="padding: 15px 10px; color: #555;">
                   <%= item.produto.nome %>
                   <input type="hidden" name="venda[itens_da_venda_attributes][<%= item.id %>][id]" value="<%= item.id %>" />
-                  <input type="hidden" name="venda[itens_da_venda_attributes][<%= item.id %>][produto_id]" value="<%= item.produto_id %>" />
+                  <input type="hidden" class="produto-id-input" name="venda[itens_da_venda_attributes][<%= item.id %>][produto_id]" value="<%= item.produto_id %>" />
                 </td>
                 <td style="padding: 15px 10px;">
-                  <%= item.quantidade %>
-                  <input type="hidden" class="qtd-input" name="venda[itens_da_venda_attributes][<%= item.id %>][quantidade]" value="<%= item.quantidade %>" />
+                  <input type="number" class="qtd-input" name="venda[itens_da_venda_attributes][<%= item.id %>][quantidade]" value="<%= item.quantidade %>" min="1" style="width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;" />
                 </td>
                 <td style="padding: 15px 10px;">
                   R$ <%= number_to_currency(item.precounitario, unit: "", separator: ",", delimiter: ".") %>
                   <input type="hidden" class="preco-input" name="venda[itens_da_venda_attributes][<%= item.id %>][precounitario]" value="<%= item.precounitario %>" />
                 </td>
-                <td style="padding: 15px 10px;">
+                <td style="padding: 15px 10px;" class="subtotal-display">
                   R$ <%= number_to_currency(item.precounitario * item.quantidade, unit: "", separator: ",", delimiter: ".") %>
                 </td>
                 <td style="padding: 15px 10px; text-align: right;">
@@ -124,115 +123,155 @@
     const produtoSelect = document.getElementById("produto-select");
     const quantidadeInput = document.getElementById("quantidade-input");
 
-    // Função para calcular e atualizar o total visual no form
+    // Função super compatível e segura para atualizar os totais visuais
     function atualizarTotal() {
-      let total = 0;
-      const linhas = tabelaItens.querySelectorAll("tr.item-carrinho");
+      try {
+        let total = 0;
+        const linhas = tabelaItens.querySelectorAll("tr.item-carrinho");
 
-      linhas.forEach(linha => {
-        // Apenas soma se a linha não foi "escondida" (deletada)
-        if (linha.style.display !== "none") {
-          const precoInput = linha.querySelector(".preco-input");
-          const qtdInput = linha.querySelector(".qtd-input");
+        linhas.forEach(linha => {
+          if (linha.style.display !== "none") {
+            const precoInput = linha.querySelector(".preco-input");
+            const qtdInput = linha.querySelector(".qtd-input");
+            const subtotalDisplay = linha.querySelector(".subtotal-display");
 
-          if (precoInput && qtdInput) {
-            const preco = parseFloat(precoInput.value) || 0;
-            const qtd = parseInt(qtdInput.value) || 0;
-            total += (preco * qtd);
+            if (precoInput && qtdInput) {
+              const preco = parseFloat(precoInput.value) || 0;
+              const qtd = parseInt(qtdInput.value) || 0;
+              const subtotal = preco * qtd;
+              total += subtotal;
+              
+              if(subtotalDisplay) {
+                subtotalDisplay.textContent = "R$ " + subtotal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+              }
+            }
           }
-        }
-      });
+        });
 
-      // Formatar formato de moeda brasileiro manualmente
-      totalVendaSpan.textContent = total.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        if (totalVendaSpan) {
+          totalVendaSpan.textContent = total.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+      } catch (error) {
+        console.error("Erro na matemática do JS (atualizarTotal):", error);
+      }
     }
 
-    // Inicializa o total se for tela de Edit
+    // Inicializa carregando a tela
     atualizarTotal();
 
-    // Adição de novo Produto ao Carrinho
+    // Evento super seguro ao adicionar
     if (btnAdd) {
       btnAdd.addEventListener("click", () => {
-        const option = produtoSelect.options[produtoSelect.selectedIndex];
+        try {
+          const option = produtoSelect.options[produtoSelect.selectedIndex];
 
-        if (!option.value) {
-          alert("Por favor, selecione um produto.");
-          return;
+          if (!option || !option.value) {
+            alert("Por favor, selecione um produto válido.");
+            return;
+          }
+
+          const produtoId = option.value;
+          const produtoNome = option.dataset.nome;
+          const precoUnitario = parseFloat(option.dataset.preco) || 0;
+          const quantidadeNova = parseInt(quantidadeInput.value) || 0;
+
+          if (quantidadeNova <= 0) {
+            alert("Por favor, insira uma quantidade maior que zero.");
+            return;
+          }
+
+          // Lógica Clássica de Busca: Procura pela linha visível deste produto
+          let linhaExistente = null;
+          const linhasCarrinho = tabelaItens.querySelectorAll("tr.item-carrinho");
+          for (let i = 0; i < linhasCarrinho.length; i++) {
+            if (linhasCarrinho[i].getAttribute("data-produto-id") === produtoId && linhasCarrinho[i].style.display !== "none") {
+              linhaExistente = linhasCarrinho[i];
+              break;
+            }
+          }
+
+          if (linhaExistente) {
+            // Apenas somar quantidade no input já existente
+            const qtdInputExistente = linhaExistente.querySelector(".qtd-input");
+            if (qtdInputExistente) {
+              const qtdAtual = parseInt(qtdInputExistente.value || "0");
+              qtdInputExistente.value = qtdAtual + quantidadeNova;
+              atualizarTotal();
+            }
+          } else {
+            // Produto novo, gerar HTML puro e injetar
+            const subtotal = precoUnitario * quantidadeNova;
+            const uniqueId = new Date().getTime();
+
+            const novaLinhaHTML = `
+              <tr class="item-carrinho" style="border-bottom: 1px solid #f0f0f0;" data-produto-id="${produtoId}">
+                <td style="padding: 15px 10px; color: #555;">
+                  ${produtoNome}
+                  <input type="hidden" class="produto-id-input" name="venda[itens_da_venda_attributes][${uniqueId}][produto_id]" value="${produtoId}" />
+                </td>
+                <td style="padding: 15px 10px;">
+                  <input type="number" class="qtd-input" name="venda[itens_da_venda_attributes][${uniqueId}][quantidade]" value="${quantidadeNova}" min="1" style="width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;" />
+                </td>
+                <td style="padding: 15px 10px;">
+                  R$ ${precoUnitario.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  <input type="hidden" class="preco-input" name="venda[itens_da_venda_attributes][${uniqueId}][precounitario]" value="${precoUnitario}" />
+                </td>
+                <td style="padding: 15px 10px;" class="subtotal-display">
+                  R$ ${subtotal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </td>
+                <td style="padding: 15px 10px; text-align: right;">
+                  <button type="button" class="btn-cancelar js-remover-item" style="background-color: transparent; color: #B78F7A; border: 1px solid #B78F7A; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Remover</button>
+                  <input type="hidden" class="destroy-input" name="venda[itens_da_venda_attributes][${uniqueId}][_destroy]" value="0" />
+                </td>
+              </tr>
+            `;
+
+            // Limpa o placeholder "i" caso exista
+            const placeholder = tabelaItens.querySelector("tr td i");
+            if (placeholder) {
+              tabelaItens.innerHTML = "";
+            }
+
+            // Injeta a string com beginend seguro
+            tabelaItens.insertAdjacentHTML('beforeend', novaLinhaHTML);
+
+            atualizarTotal();
+          }
+
+          // Reseta select para o usuário
+          produtoSelect.value = "";
+          quantidadeInput.value = "1";
+        } catch (error) {
+           console.error("Erro fatal ao adicionar/agrupar linha na tabela:", error);
+           alert("Houve um pequeno travamento na página! Certifique-se de que os dados estão corretos ou recarregue a página.");
         }
-
-        const produtoId = option.value;
-        const produtoNome = option.dataset.nome;
-        const precoUnitario = parseFloat(option.dataset.preco) || 0;
-        const quantidade = parseInt(quantidadeInput.value) || 0;
-
-        if (quantidade <= 0) {
-          alert("Por favor, insira uma quantidade válida.");
-          return;
-        }
-
-        const subtotal = precoUnitario * quantidade;
-
-        // Gerar um timestamp único para o array do Rails (ex: itens_da_venda_attributes[162489110...])
-        const uniqueId = new Date().getTime();
-
-        // Template string do HTML da Linha da Tabela formatado
-        const novaLinhaHTML = `
-          <tr class="item-carrinho" style="border-bottom: 1px solid #f0f0f0;">
-            <td style="padding: 15px 10px; color: #555;">
-              ${produtoNome}
-              <input type="hidden" name="venda[itens_da_venda_attributes][${uniqueId}][produto_id]" value="${produtoId}" />
-            </td>
-            <td style="padding: 15px 10px;">
-              ${quantidade}
-              <input type="hidden" class="qtd-input" name="venda[itens_da_venda_attributes][${uniqueId}][quantidade]" value="${quantidade}" />
-            </td>
-            <td style="padding: 15px 10px;">
-              R$ ${precoUnitario.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              <input type="hidden" class="preco-input" name="venda[itens_da_venda_attributes][${uniqueId}][precounitario]" value="${precoUnitario}" />
-            </td>
-            <td style="padding: 15px 10px;">
-              R$ ${subtotal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-            </td>
-            <td style="padding: 15px 10px; text-align: right;">
-              <button type="button" class="btn-cancelar js-remover-item" style="background-color: transparent; color: #B78F7A; border: 1px solid #B78F7A; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Remover</button>
-              <input type="hidden" class="destroy-input" name="venda[itens_da_venda_attributes][${uniqueId}][_destroy]" value="0" />
-            </td>
-          </tr>
-        `;
-
-        // Retiramos a linha "placeholder" (Design Temporário) se ela existir para inserir itens reais
-        const placeholder = tabelaItens.querySelector("tr td i");
-        if (placeholder) {
-          tabelaItens.innerHTML = "";
-        }
-
-        // Insere a nova linha no Carrinho
-        tabelaItens.insertAdjacentHTML('beforeend', novaLinhaHTML);
-        
-        // Atualiza a matemática visual
-        atualizarTotal();
-
-        // Reseta os campos para novos itens
-        produtoSelect.value = "";
-        quantidadeInput.value = "1";
       });
     }
 
-    // Delegação de evento de clique para o botão "Remover" das linhas (já que as linhas são geradas dinâmicamente)
     if (tabelaItens) {
+      // Evento de "Input" para quando o usuário digitar/clicar nas setinhas da quantidade dentro da tabela
+      tabelaItens.addEventListener("input", function (e) {
+        if (e.target && e.target.classList.contains("qtd-input")) {
+           const val = e.target.value;
+           if (val !== "" && parseInt(val) < 1) {
+             e.target.value = 1; // Impede quantias 0 ou negativas via teclado
+           }
+           atualizarTotal();
+        }
+      });
+
+      // Evento de deletar linhas (cobre deletes virtuais de DB ou totais do HTML temporal)
       tabelaItens.addEventListener("click", function (e) {
         if (e.target && e.target.classList.contains("js-remover-item")) {
           e.preventDefault();
           const linha = e.target.closest("tr");
           const destroyInput = linha.querySelector(".destroy-input");
 
-          // Verifica se o item já existia no banco pelo Input _destroy
           if (destroyInput && destroyInput.name.indexOf(linha.querySelector("input[name*='[id]']") ? "1" : "new_record") !== -1) {
-             // Se for item antigo já com ID, oculta a linha e seta destroy pra 1
+             // Oculta e marca pra destruir com Rails nested forms _destroy
              destroyInput.value = "1";
              linha.style.display = "none";
           } else {
-             // Se for novo (adicionado agora no template), apenas o excluímos da interface (do DOM)
              linha.remove();
           }
 

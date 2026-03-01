@@ -24,13 +24,13 @@
           <td style="padding: 12px;"><%= venda.funcionario&.nome %></td>
           <td style="padding: 12px; font-weight: bold; color: #6b8e23;">R$ <%= number_to_currency(venda.valor_total, unit: "", separator: ",", delimiter: ".") %></td>
           <td style="padding: 12px; text-align: center;">
-            <div style="display: flex; gap: 10px; justify-content: center;">
-              <%= link_to "Ver", venda, style: "color: #007bff; text-decoration: none; font-weight: 500;" %>
+            <div style="display: flex; gap: 10px; justify-content: center; align-items: center;">
+              <%= link_to "Ver", venda, style: "display: inline-flex; align-items: center; justify-content: center; height: 30px; padding: 0 12px; color: #003247; border: 1px solid #003247; background: transparent; border-radius: 4px; text-decoration: none; font-weight: 500; font-size: 0.9rem; box-sizing: border-box;" %>
               <% if can?(:update, venda) %>
-                <%= link_to "Editar", edit_venda_path(venda), style: "color: #ffc107; text-decoration: none; font-weight: 500;" %>
+                <%= link_to "Editar", edit_venda_path(venda), style: "display: inline-flex; align-items: center; justify-content: center; height: 30px; padding: 0 12px; color: #B78F7A; border: 1px solid #B78F7A; background: transparent; border-radius: 4px; text-decoration: none; font-weight: 500; font-size: 0.9rem; box-sizing: border-box;" %>
               <% end %>
               <% if can?(:destroy, venda) %>
-                <%= button_to "Excluir", venda, method: :delete, data: { turbo_confirm: "Tem certeza?" }, style: "background: none; border: none; color: #dc3545; cursor: pointer; text-decoration: none; font-weight: 500; padding: 0;" %>
+                <%= button_to "Excluir", venda, method: :delete, data: { turbo_confirm: "Tem certeza?" }, form: { style: "margin: 0; display: inline-flex;" }, style: "display: inline-flex; align-items: center; justify-content: center; height: 30px; padding: 0 12px; color: #c84040; border: 1px solid #c84040; background: transparent; border-radius: 4px; cursor: pointer; text-decoration: none; font-weight: 500; font-size: 0.9rem; box-sizing: border-box;" %>
               <% end %>
             </div>
           </td>
