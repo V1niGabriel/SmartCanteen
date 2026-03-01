@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root "produtos#index"
+
   resources :itens_da_vendas
   resources :vendas
   resources :funcionarios

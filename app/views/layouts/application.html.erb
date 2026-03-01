@@ -1,28 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
   <head>
-    <title><%= content_for(:title) || "Cantina Tech" %></title>
+    <title><%= content_for(:title) || "SmartCanteen - Gestão" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Cantina Tech">
+    <meta name="application-name" content="SmartCanteen">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <%= yield %>
+    <div class="hero-section">
+      <nav class="navbar">
+        <a href="/" class="navbar-brand">
+          <%= image_tag "logo-simbolo-vazado.png", alt: "Logo SmartCanteen" %>
+          SmartCanteen
+        </a>
+        
+        <ul class="navbar-menu">
+          <li>
+            <%= link_to "Início", "/", class: current_page?("/")? "active" : "" %>
+          </li>
+          <li>
+            <%= link_to "Vendas", vendas_path, class: controller_name == "vendas" ? "active" : "" %>
+          </li>
+          <li>
+            <%= link_to "Produtos", produtos_path, class: controller_name == "produtos" ? "active" : "" %>
+          </li>
+          <li>
+            <%= link_to "Clientes", clientes_path, class: controller_name == "clientes" ? "active" : "" %>
+          </li>
+          <li>
+            <%= link_to "Funcionários", funcionarios_path, class: controller_name == "funcionarios" ? "active" : "" %>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <main class="main-container">
+      <div class="content-card">
+        
+        <% flash.each do |key, message| %>
+          <div class="flash-<%= key == 'notice' ? 'notice' : 'alert' %>">
+            <%= message %>
+          </div>
+        <% end %>
+
+        <%= yield %> 
+        
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; <%= Time.now.year %> SmartCanteen - Desenvolvido por Ian Alves, José Miguel e Vinícius Gabriel (IF Baiano - Catu/BA)</p>
+    </footer>
   </body>
 </html>

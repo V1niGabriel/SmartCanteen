@@ -1,8 +1,9 @@
-<%= form_with(model: produto) do |form| %>
+<%= form_with(model: produto, class: "smart-form") do |form| %>
+  
+  <%# Bloco para exibir erros caso o usuário tente salvar faltando informações %>
   <% if produto.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(produto.errors.count, "error") %> prohibited this produto from being saved:</h2>
-
+    <div class="form-errors">
+      <h3><%= pluralize(produto.errors.count, "erro") %> impediram de salvar:</h3>
       <ul>
         <% produto.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,22 +12,23 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :nome, style: "display: block" %>
-    <%= form.text_field :nome %>
+  <div class="form-group">
+    <%= form.label :nome, "Nome do Produto", class: "form-label" %>
+    <%= form.text_field :nome, class: "form-input", placeholder: "Ex: Coxinha de Frango" %>
   </div>
 
-  <div>
-    <%= form.label :tipo, style: "display: block" %>
-    <%= form.text_field :tipo %>
+  <div class="form-group">
+    <%= form.label :tipo, "Categoria", class: "form-label" %>
+    <%= form.text_field :tipo, class: "form-input", placeholder: "Ex: Salgado" %>
   </div>
 
-  <div>
-    <%= form.label :preco, style: "display: block" %>
-    <%= form.text_field :preco %>
+  <div class="form-group">
+    <%= form.label :preco, "Preço (R$)", class: "form-label" %>
+    <%= form.number_field :preco, step: "0.01", class: "form-input", placeholder: "0.00" %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="form-actions">
+    <%= form.submit "Salvar Produto", class: "btn-submit" %>
+    <%= link_to "Cancelar", produtos_path, class: "btn-cancel" %>
   </div>
 <% end %>

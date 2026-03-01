@@ -1,0 +1,103 @@
+/* Container principal do formulário */
+.smart-form {
+  max-width: 600px;
+  margin: 0 auto; /* Centraliza o formulário na tela */
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border: 1px solid #eaeaea; 
+}
+
+/* Espaçamento entre os campos */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Textos acima dos campos */
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: #003247; /* Azul escuro da logo */
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+/* Campos de digitação (Inputs) */
+.form-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #333;
+  box-sizing: border-box; /* Garante que o padding não quebre a largura */
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Efeito ao clicar no campo para digitar */
+.form-input:focus {
+  outline: none;
+  border-color: #B78F7A; /* Cor Laranja/Ferrugem */
+  box-shadow: 0 0 0 3px rgba(183, 143, 122, 0.2);
+}
+
+/* Área dos Botões */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  align-items: center;
+}
+
+/* Botão Principal de Salvar */
+.btn-submit {
+  background-color: #B78F7A;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+  background-color: #9c7865;
+}
+
+/* Link de Cancelar/Voltar */
+.btn-cancel {
+  color: #777;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.btn-cancel:hover {
+  color: #d9534f; /* Fica vermelho suave para indicar cancelamento */
+  text-decoration: underline;
+}
+
+/* Caixa de Erros do Rails (Ex: "Nome não pode ficar em branco") */
+.form-errors {
+  background-color: #f8d7da;
+  color: #842029;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 25px;
+  border: 1px solid #f5c2c7;
+}
+
+.form-errors h3 {
+  font-size: 1rem;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.form-errors ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.9rem;
+}
