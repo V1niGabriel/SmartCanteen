@@ -17,11 +17,8 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-
   <body>
     <div class="hero-section">
-      <% if funcionario_signed_in? %>
-
       <nav class="navbar">
         <a href="/" class="navbar-brand">
           <%= image_tag "logo-simbolo-vazado.png", alt: "Logo SmartCanteen" %>
@@ -44,9 +41,20 @@
             <%= link_to "Funcionários", funcionarios_path, class: controller_name == "funcionarios" ? "active" : "" %>
           </li>
           <li>
-            <%= link_to "Cargos", cargos_path, class: controller_name == "Cargos" ? "active" : ""%>
+            <%= link_to "Cargos", cargos_path, class: controller_name == "cargos" ? "active" : ""%>
           </li>
-          <%= button_to "Sair", destroy_funcionario_session_path, method: :delete %>
+          <% if funcionario_signed_in? %>
+            <div class="user-menu-wrapper">
+              <button class="menu-toggle" type="button" aria-label="Abrir menu do usuário">
+                <span class="bar"></span> 
+                <span class="bar"></span> 
+                <span class="bar"></span> 
+              </button>    
+              <div class="user-dropdown" id="userMenu">
+                Logado como: <strong><%= current_funcionario.nome %></strong> |
+                <%= button_to "Sair", destroy_funcionario_session_path, method: :delete, class: "btn-logout" %>
+              </div>
+            </div>
           <% end %>
         </ul>
       </nav>
@@ -69,5 +77,36 @@
     <footer class="footer">
       <p>&copy; <%= Time.now.year %> SmartCanteen - Desenvolvido por Ian Alves, José Miguel e Vinícius Gabriel (IF Baiano - Catu/BA)</p>
     </footer>
+    <script>
+      // Esta função rodará tanto no primeiro carregamento quanto em trocas de página (Turbo)
+      const setupMenu = () => {
+        const btn = document.querySelector(".menu-toggle");
+        const menu = document.getElementById("userMenu");
+
+        if (btn && menu) {
+          // Removemos qualquer evento antigo para não duplicar
+          btn.onclick = null; 
+          
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            menu.classList.toggle("active");
+            console.log("Menu clicado! Estado atual:", menu.classList.contains("active"));
+          });
+        }
+      };
+
+      // Escuta o carregamento normal e o do Turbo
+      document.addEventListener("DOMContentLoaded", setupMenu);
+      document.addEventListener("turbo:load", setupMenu);
+
+      // Fechar ao clicar fora
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("userMenu");
+        if (menu && menu.classList.contains("active") && !menu.contains(e.target)) {
+          menu.classList.remove("active");
+        }
+        });
+  </script>
   </body>
 </html>
