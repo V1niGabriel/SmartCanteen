@@ -68,8 +68,9 @@ class FuncionariosController < ApplicationController
       @cargos = Cargo.all
     end
 
-    # Only allow a list of trusted parameters through.
     def funcionario_params
-      params.expect(funcionario: [ :cargo_id, :nome, :cpf, :telefone ])
+      p = params.expect(funcionario: [ :cargo_id, :nome, :cpf, :telefone, :password ])
+      p.delete(:password) if p[:password].blank?
+      p
     end
 end

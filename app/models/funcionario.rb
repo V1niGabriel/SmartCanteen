@@ -10,4 +10,6 @@ class Funcionario < ApplicationRecord
                   format: { with: /\A\d+\z/, message: "deve conter apenas números" }
   validates :telefone, presence: true, length: { in: 10..11 },
                        format: { with: /\A\d+\z/, message: "deve conter apenas números" }
+  validates :password, presence: true, length: { minimum: 6 }, on: :create
+  validates :password, length: { minimum: 6 }, allow_blank: true, on: :update
 end

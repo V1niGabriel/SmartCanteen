@@ -32,6 +32,11 @@
   </div>
 
   <div>
+    <%= form.label :password, "Senha", style: "display: block" %>
+    <%= form.password_field :password %>
+  </div>
+
+  <div>
     <%= form.submit %>
   </div>
 <% end %>
