@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_28_222442) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_01_031339) do
+  create_table "cargo_permissoes", force: :cascade do |t|
+    t.integer "cargo_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "permissao_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cargo_id"], name: "index_cargo_permissoes_on_cargo_id"
+    t.index ["permissao_id"], name: "index_cargo_permissoes_on_permissao_id"
+  end
+
   create_table "cargos", force: :cascade do |t|
     t.string "nome_cargo"
   end
@@ -41,6 +50,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_222442) do
     t.index ["venda_id"], name: "index_itens_da_vendas_on_venda_id"
   end
 
+  create_table "permissoes", force: :cascade do |t|
+    t.string "acao"
+    t.datetime "created_at", null: false
+    t.string "tabela"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "produtos", force: :cascade do |t|
     t.string "nome"
     t.decimal "preco"
@@ -55,6 +71,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_222442) do
     t.index ["funcionario_id"], name: "index_vendas_on_funcionario_id"
   end
 
+  add_foreign_key "cargo_permissoes", "cargos"
+  add_foreign_key "cargo_permissoes", "permissoes"
   add_foreign_key "funcionarios", "cargos"
   add_foreign_key "itens_da_vendas", "produtos"
   add_foreign_key "itens_da_vendas", "vendas"

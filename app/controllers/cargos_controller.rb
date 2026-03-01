@@ -65,6 +65,6 @@ class CargosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def cargo_params
-      params.expect(cargo: [ :nome_cargo ])
+      params.expect(cargo: [ :nome_cargo, permissao_ids: [] ])
     end
 end
