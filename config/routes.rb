@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
-  root "produtos#index"
-
+  devise_for :funcionarios
   resources :itens_da_vendas
   resources :vendas
   resources :funcionarios
@@ -18,5 +17,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "home#index"
 end

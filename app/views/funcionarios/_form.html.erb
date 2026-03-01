@@ -23,12 +23,12 @@
 
   <div>
     <%= form.label :cpf, style: "display: block" %>
-    <%= form.text_field :cpf %>
+    <%= form.text_field :cpf, maxlength: 11, pattern: "\\d{11}", title: "Digite 11 números", inputmode: "numeric", oninput: "this.value = this.value.replace(/\\D/g, '')" %>
   </div>
 
   <div>
     <%= form.label :telefone, style: "display: block" %>
-    <%= form.text_field :telefone %>
+    <%= form.telephone_field :telefone, maxlength: 11, pattern: "\\d{10,11}", title: "Digite 10 ou 11 números", oninput: "this.value = this.value.replace(/\\D/g, '')" %>
   </div>
 
   <div>
