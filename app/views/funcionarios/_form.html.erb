@@ -1,8 +1,7 @@
-<%= form_with(model: funcionario) do |form| %>
+<%= form_with(model: funcionario, class: "smart-form") do |form| %>
   <% if funcionario.errors.any? %>
-    <div style="color: red">
+    <div class= "form-errors">
       <h2><%= pluralize(funcionario.errors.count, "error") %> prohibited this funcionario from being saved:</h2>
-
       <ul>
         <% funcionario.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,32 +10,33 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :cargo_id, "Cargo", style: "display: block" %>
+  <div class="form-group">
+    <%= form.label :cargo_id, "Cargo", class: "form-label" %>
     <%= form.collection_select :cargo_id, @cargos, :id, :nome_cargo, prompt: "Selecione um cargo" %>
   </div>
 
-  <div>
-    <%= form.label :nome, style: "display: block" %>
-    <%= form.text_field :nome %>
+  <div class="form-group">
+    <%= form.label :nome, class: "form-label" %>
+    <%= form.text_field :nome, class: "form-input" %>
   </div>
 
-  <div>
-    <%= form.label :cpf, style: "display: block" %>
-    <%= form.text_field :cpf, maxlength: 11, pattern: "\\d{11}", title: "Digite 11 números", inputmode: "numeric", oninput: "this.value = this.value.replace(/\\D/g, '')" %>
+  <div class="form-group">
+    <%= form.label :cpf, class: "form-label" %>
+    <%= form.text_field :cpf, class: "form-input", maxlength: 11, pattern: "\\d{11}", title: "Digite 11 números", inputmode: "numeric", oninput: "this.value = this.value.replace(/\\D/g, '')" %>
   </div>
 
-  <div>
-    <%= form.label :telefone, style: "display: block" %>
-    <%= form.telephone_field :telefone, maxlength: 11, pattern: "\\d{10,11}", title: "Digite 10 ou 11 números", oninput: "this.value = this.value.replace(/\\D/g, '')" %>
+  <div class="form-group">
+    <%= form.label :telefone, class: "form-label" %>
+    <%= form.telephone_field :telefone, class: "form-input", maxlength: 11, pattern: "\\d{10,11}", title: "Digite 10 ou 11 números", oninput: "this.value = this.value.replace(/\\D/g, '')" %>
   </div>
 
-  <div>
-    <%= form.label :password, "Senha", style: "display: block" %>
-    <%= form.password_field :password %>
+  <div class="form-group">
+    <%= form.label :password, "Senha", class: "form-label" %>
+    <%= form.password_field :password, class: "form-input" %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="form-actions">
+    <%= form.submit "Salvar", class: "btn-submit" %>
+    <%= link_to "Cancelar", funcionarios_path, class: "btn-cancel" %>
   </div>
 <% end %>

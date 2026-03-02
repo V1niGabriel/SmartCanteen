@@ -1,8 +1,41 @@
-<%= render @funcionario %>
+<% content_for :title, "Detalhes do Funcionário"%>
 
-<div>
-  <%= link_to "Edit this funcionario", edit_funcionario_path(@funcionario) %> |
-  <%= link_to "Back to funcionarios", funcionarios_path %>
+<div class="smart-form">
 
-  <%= button_to "Destroy this funcionario", @funcionario, method: :delete %>
+  <div class="page-header" style="border-bottom: none; margin-bottom: 10px;">
+    <h1 class="page-title">Detalhes do Funcionário</h1>
+  </div>
+
+  <div class="details-info">
+    <p class="details-row">
+      <strong>Nome:</strong> 
+      <span><%= @funcionario.nome %></span>
+    </p>
+
+    <p class="details-row">
+      <strong>CPF:</strong> 
+      <span><%= @funcionario.cpf %></span>
+    </p>
+
+    <p class="details-row">
+      <strong>Telefone:</strong> 
+      <span><%= @funcionario.telefone %></span>
+    </p>
+
+     <p class="details-row">
+      <strong>Cargo:</strong> 
+      <span><%= @funcionario.cargo&.nome_cargo %></span>
+    </p>
+
+    <div class="form-actions">
+      <% if can? :update, Produto%>
+      <%= link_to "Editar Funcionário", edit_funcionario_path(@funcionario), class: "btn-submit", style: "text-decoration: none;" %>
+    <% end %>
+    
+    <%= link_to "Voltar", funcionarios_path, class: "btn-cancel" %>
+    
+    <% if can? :destroy, Produto%>
+       <%= button_to "Excluir", @produto, method: :delete, form: { data: { turbo_confirm: "Tem certeza que deseja excluir?" } }, class: "btn-delete", form_class: "action-delete-form" %>
+    <% end %>
+  </div>
 </div>

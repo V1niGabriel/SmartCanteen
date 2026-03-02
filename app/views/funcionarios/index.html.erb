@@ -1,16 +1,22 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Funcionarios" %>
 
-<h1>Funcionarios</h1>
-
-<div id="funcionarios">
-  <% @funcionarios.each do |funcionario| %>
-    <%= render funcionario %>
-    <p>
-      <%= link_to "Show this funcionario", funcionario %>
-    </p>
-  <% end %>
+<div class="clfc-page-header">
+  <h1 class="clfc-page-title">Recursos Humanos</h1>
+    <%= link_to "+ Novo Funcionário", new_funcionario_path, class: "clfc-btn-primary" %>
 </div>
 
-<%= link_to "New funcionario", new_funcionario_path %>
+<div class="clfc-cards-grid">
+  <% @funcionarios.each do |funcionario| %>
+    <div class="clfc-card-item">
+      <div class="clfc-card-info">
+        <span class="clfc-card-tag">Funcionário</span>
+        
+        <h3 class="clfc-card-title"><%= funcionario.nome %></h3> 
+      </div>
+      
+      <div class="clfc-card-action">
+        <%= link_to "→", funcionario, class: "clfc-btn-arrow", title: "Mostrar detalhes do funcionario" %>
+      </div>
+    </div>
+  <% end %>
+</div>

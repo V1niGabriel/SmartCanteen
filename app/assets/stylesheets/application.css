@@ -1,6 +1,6 @@
  @import "produtos";
  @import "formularios";
- @import "clientes";
+ @import "CLFC";
 
  body,
  html {
@@ -44,12 +44,12 @@
 
  .navbar-brand img {
    height: 45px;
-   /* Se o símbolo for claro, ele vai destacar perfeitamente no fundo azul escuro */
+   /* Se o símbolo for claro, ele vai destacar perfeitamente no fundo */
  }
 
  .navbar-menu {
    display: flex;
-   gap: 25px;
+   gap: 20px;
    list-style: none;
    margin: 0;
    padding: 0;
