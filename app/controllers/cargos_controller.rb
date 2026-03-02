@@ -49,11 +49,18 @@ class CargosController < ApplicationController
 
   # DELETE /cargos/1 or /cargos/1.json
   def destroy
-    @cargo.destroy!
+    begin
+      @cargo.destroy!
 
-    respond_to do |format|
-      format.html { redirect_to cargos_path, notice: "Cargo Deletado!", status: :see_other }
-      format.json { head :no_content }
+      respond_to do |format|
+        format.html { redirect_to cargos_path, notice: "Cargo excluído com sucesso!", status: :see_other }
+        format.json { head :no_content }
+      end
+    rescue ActiveRecord::InvalidForeignKey
+      respond_to do |format|
+        format.html { redirect_to cargos_path, alert: "Não é possível excluir este cargo porque existem funcionários vinculados a ele.", status: :see_other }
+        format.json { render json: { error: "Não é possível excluir o cargo pois existem funcionários vinculados." }, status: :unprocessable_entity }
+      end
     end
   end
 
