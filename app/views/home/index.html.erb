@@ -1,14 +1,220 @@
-<% content_for :title, "Cantina Tech - Início" %>
+<% content_for :title, "SmartCanteen - Dashboard" %>
 
-<h1>Cantina Tech</h1>
-<p>Bem-vindo, <strong><%= current_funcionario.nome %></strong>!</p>
+<!-- Bibliotecas para Gráfico e Calendário -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<h2>Menu</h2>
-<ul>
-  <li><%= link_to "Produtos", produtos_path %></li>
-  <li><%= link_to "Clientes", clientes_path %></li>
-  <li><%= link_to "Cargos", cargos_path %></li>
-  <li><%= link_to "Funcionários", funcionarios_path %></li>
-  <li><%= link_to "Vendas", vendas_path %></li>
-  <li><%= link_to "Itens da Venda", itens_da_vendas_path %></li>
-</ul>
+<div class="page-header-row" style="margin-bottom: 30px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px;">
+  <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+    <div>
+      <h1 style="margin: 0; color: #003247;">Painel de Bordo <span style="font-size: 1rem; color: #777; font-weight: 400;">(<%= @start_date.strftime("%d/%m/%Y") %> - <%= @end_date.strftime("%d/%m/%Y") %>)</span></h1>
+      <p style="margin: 5px 0 0 0; color: #555;">Bem-vindo(a), <strong><%= current_funcionario.nome %></strong>!</p>
+    </div>
+    <div>
+      <% if can?(:manage, :all) %>
+        <span style="background-color: #003247; color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.95rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Visão Operacional Global</span>
+      <% else %>
+        <span style="background-color: #6b8e23; color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.95rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Seu Desempenho Pessoal</span>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Filtro de Datas -->
+<form method="GET" action="<%= root_path %>" style="display: flex; gap: 10px; align-items: flex-end; margin-bottom: 15px; background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);" data-turbo="false">
+  <div>
+    <label for="date_range" style="color: #003247; font-weight: 600; font-size: 0.95rem; margin-bottom: 8px; display: block;">Período</label>
+    <div style="position: relative; display: inline-block;">
+      <input type="text" id="date_range" name="date_range" placeholder="01/02/2026 até 28/02/2026" value="<%= params[:date_range] %>" autocomplete="off"
+             style="padding: 10px 15px; border: 1px solid #d1d5db; border-radius: 6px; width: 300px; outline: none; box-sizing: border-box; font-family: inherit; font-size: 0.95rem; color: #333; transition: border-color 0.2s;">
+    </div>
+  </div>
+  <div style="display: flex; gap: 10px;">
+    <button type="submit" style="background-color: #003247; color: white; padding: 10px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 0.95rem; height: 41px; transition: background-color 0.2s;">Filtrar</button>
+    <% if params[:date_range].present? %>
+      <%= link_to "Limpar", root_path, style: "display: inline-flex; align-items: center; justify-content: center; background-color: #B78F7A; color: white; padding: 0 20px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 0.95rem; height: 41px; transition: opacity 0.2s;" %>
+    <% end %>
+  </div>
+  <div style="margin-left: auto; color: #6b7280; font-size: 0.95rem; align-self: center;">
+    <span style="display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Registros na Tela</span>
+    <strong style="color: #111827; font-size: 1.1rem;"><%= @vendas_escudo.select(:id).distinct.count %> vendas</strong>
+  </div>
+</form>
+
+<div style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+  <!-- Receita Total -->
+  <div class="main-card-container" style="flex: 1; min-width: 300px; text-align: center; padding: 15px 25px; background: linear-gradient(135deg, #003247 0%, #004d6e 100%); color: white; display: flex; flex-direction: column; justify-content: center;">
+    <h2 style="margin: 0; font-size: 1.2rem; font-weight: 400; opacity: 0.9;">Receita Bruta do Período</h2>
+    <div style="font-size: 2.8rem; font-weight: bold; margin-top: 10px; color: #B78F7A; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+      R$ <%= number_to_currency(@valor_total_7_dias, unit: "", separator: ",", delimiter: ".") %>
+    </div>
+  </div>
+
+  <!-- Gráfico -->
+  <div class="main-card-container" style="flex: 2; min-width: 500px; padding: 15px 25px; position: relative;">
+    <h3 style="margin: 0 0 10px 0; color: #003247; font-size: 1.1rem; font-weight: 500;">Evolução de Receita Diária</h3>
+    <div style="height: 180px;">
+      <canvas id="revenueChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div style="display: flex; gap: 15px; flex-wrap: wrap;">
+  <!-- Card Funcionários -->
+  <div class="main-card-container" style="flex: 1; min-width: 300px; padding: 15px 25px;">
+    <h3 style="color: #003247; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; margin-top: 0;">
+      <%= can?(:manage, :all) ? "Ranking de Atendentes" : "Meus Atendimentos" %>
+    </h3>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+      <thead>
+        <tr style="text-align: left; background-color: #f9f9f9;">
+          <th style="padding: 12px; color: #003247;">Atendente</th>
+          <th style="padding: 12px; text-align: center; color: #003247;">Nº Atendimentos</th>
+          <th style="padding: 12px; text-align: right; color: #003247;">Valor Arrecadado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @desempenho_funcionarios.any? %>
+          <% @desempenho_funcionarios.each do |d| %>
+            <tr style="border-bottom: 1px solid #f0f0f0;">
+              <td style="padding: 15px 12px;"><%= d.funcionario.nome %> <span style="font-size: 0.8em; color: #888;">(#<%= d.funcionario_id %>)</span></td>
+              <td style="padding: 15px 12px; text-align: center;"><%= d.total_atendimentos %></td>
+              <td style="padding: 15px 12px; text-align: right; color: #6b8e23; font-weight: bold;">R$ <%= number_to_currency(d.total_arrecadado, unit: "", separator: ",", delimiter: ".") %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr><td colspan="3" style="padding: 20px; text-align: center; color: #777;">Nenhuma venda registrada nos últimos 7 dias.</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Card Clientes -->
+  <div class="main-card-container" style="flex: 1; min-width: 300px; padding: 15px 25px;">
+    <h3 style="color: #003247; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; margin-top: 0;">Desempenho de Clientes</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+      <thead>
+        <tr style="text-align: left; background-color: #f9f9f9;">
+          <th style="padding: 12px; color: #003247;">Cliente</th>
+          <th style="padding: 12px; text-align: center; color: #003247;">Qtd. de Compras</th>
+          <th style="padding: 12px; text-align: right; color: #003247;">Valor Gasto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @desempenho_clientes.any? %>
+          <% @desempenho_clientes.each do |c| %>
+            <tr style="border-bottom: 1px solid #f0f0f0;">
+              <td style="padding: 15px 12px;"><%= c.cliente.nome %> <span style="font-size: 0.8em; color: #888;">(#<%= c.cliente_id %>)</span></td>
+              <td style="padding: 15px 12px; text-align: center;"><%= c.total_compras %></td>
+              <td style="padding: 15px 12px; text-align: right; color: #6b8e23; font-weight: bold;">R$ <%= number_to_currency(c.total_gasto, unit: "", separator: ",", delimiter: ".") %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr><td colspan="3" style="padding: 20px; text-align: center; color: #777;">Nenhum cliente realizou compras nos últimos 7 dias.</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // Setup rodará em carregamento normal e Turbo
+  document.addEventListener("turbo:load", initDashboard);
+  document.addEventListener("DOMContentLoaded", initDashboard);
+
+  function initDashboard() {
+    // 1. Inicializar Range Date Picker (Flatpickr)
+    const dateInput = document.getElementById('date_range');
+    if (dateInput && !dateInput.classList.contains('flatpickr-input')) {
+      flatpickr(dateInput, {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "d/m/Y",
+        locale: "pt",
+        defaultDate: [
+          "<%= @start_date.strftime("%Y-%m-%d") %>", 
+          "<%= @end_date.strftime("%Y-%m-%d") %>"
+        ]
+      });
+    }
+
+    // 2. Inicializar Gráfico (Chart.js)
+    const canvas = document.getElementById('revenueChart');
+    if (!canvas) return;
+
+    // Destruir instância anterior em caso de hot reload do Turbo
+    const existingChart = Chart.getChart(canvas);
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    // Variável raw calculada pelo Controller do Rails com zeros inclusos
+    const rawData = <%= raw @receita_diaria.to_json %>;
+    
+    // Convertendo AAAA-MM-DD para o título curto MM/DD nos eixos x
+    const labels = Object.keys(rawData).map(dateStr => {
+      const parts = dateStr.split("-");
+      if(parts.length === 3) return `${parts[2]}/${parts[1]}`;
+      return dateStr;
+    });
+    const dataValues = Object.values(rawData);
+
+    // Contexto de Canvas da DOM e renderização da Linha Otimizada
+    const ctx = canvas.getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Receita Diária (R$)',
+          data: dataValues,
+          borderColor: '#6b8e23',
+          backgroundColor: 'rgba(107, 142, 35, 0.2)',
+          borderWidth: 3,
+          pointBackgroundColor: '#B78F7A',
+          pointBorderColor: '#fff',
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                let value = context.parsed.y;
+                return 'R$ ' + value.toFixed(2).replace('.', ',');
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return 'R$ ' + value;
+              }
+            },
+            grid: {
+              color: '#f0f0f0'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+  }
+</script>
