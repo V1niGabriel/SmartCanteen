@@ -24,7 +24,7 @@
 
 /* Botão Novo Produto */
 .new-prod-btn {
-  background-color: #e07a5f; /* Cor laranja-terracota da referência */
+  background-color: #e07a5f; 
   color: #fff;
   text-decoration: none;
   padding: 10px 20px;
@@ -57,7 +57,7 @@
 
 /* Seção de imagem */
 .card-image-section {
-  width: 120px; /* Largura fixa da imagem */
+  width: 120px; 
   flex-shrink: 0; /* Impede que a imagem encolha */
 }
 
@@ -107,13 +107,13 @@
 .product-price-value {
   font-size: 0.9rem;
   margin: 2px 0 0 0;
-  color: #e07a5f; /* Preço na cor laranja-terracota */
+  color: #e07a5f; 
   font-weight: 600;
 }
 
 /* Estilo do link de seta */
 .product-arrow-link {
-  color: #e07a5f; /* Seta na cor laranja-terracota */
+  color: #e07a5f; 
   text-decoration: none;
   font-size: 1.5rem;
   line-height: 1;
@@ -127,9 +127,7 @@
   transform: translateX(3px); /* Pequeno efeito de movimento */
 }
 
-/* =========================================
-   ESTILIZAÇÃO DA PÁGINA SHOW (DETALHES)
-   ========================================= */
+/* ESTILIZAÇÃO DA PÁGINA SHOW (DETALHES)*/
 
 /* Caixa interna para destacar os dados de leitura */
 .details-info {
