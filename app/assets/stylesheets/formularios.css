@@ -2,7 +2,7 @@
 .smart-form {
   position: relative; 
   max-width: 600px;
-  margin: 0 auto; /* Centraliza o formulário na tela */
+  margin: 0 auto; 
   background: #ffffff;
   padding: 30px;
   border-radius: 8px;
@@ -18,7 +18,7 @@
 .form-label {
   display: block;
   font-weight: 600;
-  color: #003247; /* Azul escuro da logo */
+  color: #003247;
   margin-bottom: 8px;
   font-size: 0.95rem;
 }
@@ -38,7 +38,7 @@
 /* Efeito ao clicar no campo para digitar */
 .form-input:focus {
   outline: none;
-  border-color: #B78F7A; /* Cor Laranja/Ferrugem */
+  border-color: #B78F7A; 
   box-shadow: 0 0 0 3px rgba(183, 143, 122, 0.2);
 }
 
@@ -140,4 +140,3 @@
   transform: translateY(-1px); 
 }
 
-/* O botão de excluir flutua no canto direito inferior */
