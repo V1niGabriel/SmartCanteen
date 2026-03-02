@@ -25,7 +25,7 @@ class ClientesController < ApplicationController
 
     respond_to do |format|
       if @cliente.save
-        format.html { redirect_to clientes_path, notice: "Cliente criado com Sucesso!." }
+        format.html { redirect_to clientes_path, notice: "Cliente criado com Sucesso!" }
         format.json { render :show, status: :created, location: @cliente }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -52,7 +52,7 @@ class ClientesController < ApplicationController
     @cliente.destroy!
 
     respond_to do |format|
-      format.html { redirect_to clientes_path, notice: "Cliente deletado!.", status: :see_other }
+      format.html { redirect_to clientes_path, notice: "Cliente deletado!", status: :see_other }
       format.json { head :no_content }
     end
   end

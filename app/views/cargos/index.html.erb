@@ -1,16 +1,22 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Cargos" %>
 
-<h1>Cargos</h1>
-
-<div id="cargos">
-  <% @cargos.each do |cargo| %>
-    <%= render cargo %>
-    <p>
-      <%= link_to "Show this cargo", cargo %>
-    </p>
+<div class="clfc-page-header">
+  <h1 class="clfc-page-title">Cargos</h1>
+  <% if can? :Create, Cargo%>
+    <%= link_to "+ Novo Cargo", new_cargo_path, class: "clfc-btn-primary" %>
   <% end %>
 </div>
 
-<%= link_to "New cargo", new_cargo_path %>
+<div class="clfc-cards-grid">
+  <% @cargos.each do |cargo| %>
+    <div class="clfc-card-item">
+      <div class="clfc-card-info">
+        <h3 class="clfc-card-title"><%= cargo.nome_cargo %></h3> 
+      </div>
+      
+      <div class="clfc-card-action">
+        <%= link_to "→", edit_cargo_path(cargo), class: "clfc-btn-arrow" %>
+      </div>
+    </div>
+  <% end %>
+</div>
