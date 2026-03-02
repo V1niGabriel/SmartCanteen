@@ -34,6 +34,7 @@ CargoPermissao.find_or_create_by!(cargo: cargo_gerente, permissao: permissao_tot
 permissoes_atendente = [
   Permissao.find_by(acao: 'read', tabela: 'Produto'),
   Permissao.find_by(acao: 'read', tabela: 'Cliente'),
+  Permissao.find_by(acao: 'create', tabela: 'Cliente'),
   Permissao.find_by(acao: 'read', tabela: 'Venda'),
   Permissao.find_by(acao: 'create', tabela: 'Venda')
 ]

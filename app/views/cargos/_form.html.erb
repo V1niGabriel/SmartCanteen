@@ -95,13 +95,15 @@
     <% end %>
   </div>
 
-  <div class="form-actions">
+  <div class="form-actions" style="display: flex; gap: 10px; align-items: center;">
     <%= form.submit "Salvar Cargo", style: "padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;" %>
-    <%= link_to "Cancelar", cargos_path, class: "btn-cancel"%>
+    <%= link_to "Cancelar", cargos_path, class: "btn-cancel" %>
+  </div>
+<% end %>
 
-    <% if cargo.persisted? %>
-      <%= button_to "Excluir", @cargo, method: :delete, class: "btn-delete"%>
-    <% end %>
+<% if cargo.persisted? %>
+  <div style="margin-top: 15px;">
+    <%= button_to "Excluir Cargo", cargo, method: :delete, form: { data: { turbo_confirm: "Tem certeza que deseja excluir este cargo?" } }, class: "btn-delete", style: "padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;" %>
   </div>
 <% end %>
 

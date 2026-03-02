@@ -2,7 +2,7 @@
 
 <div class="clfc-page-header">
   <h1 class="clfc-page-title">Cargos</h1>
-  <% if can? :Create, Cargo%>
+  <% if can? :create, Cargo %>
     <%= link_to "+ Novo Cargo", new_cargo_path, class: "clfc-btn-primary" %>
   <% end %>
 </div>
