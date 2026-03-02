@@ -1,5 +1,6 @@
 /* Container principal do formulário */
 .smart-form {
+  position: relative; 
   max-width: 600px;
   margin: 0 auto; /* Centraliza o formulário na tela */
   background: #ffffff;
@@ -60,6 +61,12 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s;
+}
+
+.delete-action-container {
+  position: absolute;
+  bottom: 30px; /* Ajuste se o botão ficar muito alto ou baixo */
+  right: 30px;
 }
 
 .btn-submit:hover {
@@ -132,3 +139,5 @@
   color: white; 
   transform: translateY(-1px); 
 }
+
+/* O botão de excluir flutua no canto direito inferior */
