@@ -1,0 +1,140 @@
+/* =========================================
+   ESTILIZAÇÃO DA PÁGINA DE LOGIN (AUTH)
+   ========================================= */
+
+/* Centraliza o card de login na tela */
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+}
+
+/* O "Mini Card" do formulário */
+.auth-card {
+  width: 100%;
+  max-width: 400px; 
+  background: #ffffff;
+  padding: 45px 35px;
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08); 
+}
+
+/* Textos de Boas-vindas */
+.auth-title {
+  color: #003247;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: #888;
+  font-size: 0.95rem;
+  margin-bottom: 35px;
+}
+
+/* Espaçamento dos inputs */
+.auth-group {
+  margin-bottom: 22px;
+}
+
+.auth-label {
+  display: block;
+  font-weight: 600;
+  color: #003247;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Estilo do Campo de Digitação */
+.auth-input {
+  width: 100%;
+  padding: 15px 16px;
+  border: 1px solid #dcdde1;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #333;
+  box-sizing: border-box;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+}
+
+/* Efeito ao clicar no input */
+.auth-input:focus {
+  outline: none;
+  border-color: #B78F7A;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(183, 143, 122, 0.15); /* Anel de foco brilhante */
+}
+
+/* Checkbox "Lembrar de mim" */
+.auth-checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.auth-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: white; /* Pinta a caixinha do checkbox com a cor do sistema */
+}
+
+.auth-checkbox-label {
+  font-size: 0.95rem;
+  color: #555;
+  cursor: pointer;
+  -webkit-user-select: none; 
+  user-select: none;
+}
+
+/* Botão de Entrar Gigante e Atrativo */
+.auth-btn {
+  width: 100%;
+  background-color: #B78F7A;
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth-btn:hover {
+  background-color: #ff7675;
+  transform: translateY(-2px); /* Efeito do botão levantando */
+  box-shadow: 0 5px 15px rgba(183, 143, 122, 0.3);
+}
+
+/* Links do Devise no rodapé (Esqueci a senha) */
+.auth-links {
+  margin-top: 30px;
+  text-align: center;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 25px;
+}
+
+.auth-links a {
+  display: block;
+  color: #B78F7A;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  transition: color 0.3s;
+}
+
+.auth-links a:hover {
+  color: #003247; /* Muda pro azul ao passar o mouse */
+  text-decoration: underline;
+}

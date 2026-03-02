@@ -1,26 +1,36 @@
-<h2>Entrar</h2>
+<div class="auth-wrapper">
+  <div class="auth-card">
+    
+    <h2 class="auth-title">Bem-vindo de volta!</h2>
+    <p class="auth-subtitle">Acesse o painel do SmartCanteen</p>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <p><%= f.label :cpf, "CPF" %></p>
-    <p><%= f.text_field :cpf, autofocus: true, autocomplete: "off", maxlength: 11, inputmode: "numeric", oninput: "this.value = this.value.replace(/\\D/g, '')" %></p>
-  </div>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "auth-form" }) do |f| %>
+      
+      <div class="auth-group">
+        <%= f.label :cpf, "CPF", class: "auth-label" %>
+        <%= f.text_field :cpf, autofocus: true, autocomplete: "off", maxlength: 11, inputmode: "numeric", oninput: "this.value = this.value.replace(/\\D/g, '')", class: "auth-input", placeholder: "Digite seu CPF" %>
+      </div>
 
-  <div class="field">
-    <p><%= f.label :password, "Senha" %></p>
-    <p><%= f.password_field :password, autocomplete: "current-password" %></p>
-  </div>
+      <div class="auth-group">
+        <%= f.label :password, "Senha", class: "auth-label" %>
+        <%= f.password_field :password, autocomplete: "current-password", class: "auth-input", placeholder: "Sua senha de acesso" %>
+      </div>
 
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <p><%= f.check_box :remember_me %></p>
-      <p><%= f.label :remember_me, "Lembrar de mim" %></p>
+      <% if devise_mapping.rememberable? %>
+        <div class="auth-checkbox-group">
+          <%= f.check_box :remember_me, class: "auth-checkbox" %>
+          <%= f.label :remember_me, "Lembrar de mim", class: "auth-checkbox-label" %>
+        </div>
+      <% end %>
+
+      <div class="auth-actions">
+        <%= f.submit "Entrar no Sistema", class: "auth-btn" %>
+      </div>
+    <% end %>
+
+    <div class="auth-links">
+      <%= render "funcionarios/shared/links" %>
     </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit "Entrar" %>
+    
   </div>
-<% end %>
-
-<%= render "funcionarios/shared/links" %>
+</div>
