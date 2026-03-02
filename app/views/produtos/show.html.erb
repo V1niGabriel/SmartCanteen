@@ -1,8 +1,38 @@
-<%= render @produto %>
+<% content_for :title, "Detalhes do Produto" %>
 
-<div>
-  <%= link_to "Edit this produto", edit_produto_path(@produto) %> |
-  <%= link_to "Back to produtos", produtos_path %>
+<div class="smart-form">
+  
+  <div class="page-header" style="border-bottom: none; margin-bottom: 10px;">
+    <h1 class="page-title">Detalhes do Produto</h1>
+  </div>
 
-  <%= button_to "Destroy this produto", @produto, method: :delete %>
+  <div class="details-info">
+    <p class="details-row">
+      <strong>Nome:</strong> 
+      <span><%= @produto.nome %></span>
+    </p>
+    
+    <p class="details-row">
+      <strong>Preço:</strong> 
+      <span><%= number_to_currency(@produto.preco, unit: "R$ ", separator: ",", delimiter: ".") %></span>
+    </p>
+    
+    <p class="details-row">
+      <strong>Tipo:</strong> 
+      <span style="text-transform: capitalize;"><%= @produto.tipo %></span>
+    </p>
+  </div>
+
+  <div class="form-actions">
+    <% if can? :update, Produto%>
+      <%= link_to "Editar Produto", edit_produto_path(@produto), class: "btn-submit", style: "text-decoration: none;" %>
+    <% end %>
+    
+    <%= link_to "Voltar", produtos_path, class: "btn-cancel" %>
+    
+    <% if can? :destroy, Produto%>
+       <%= button_to "Excluir", @produto, method: :delete, form: { data: { turbo_confirm: "Tem certeza que deseja excluir?" } }, class: "btn-delete", form_class: "action-delete-form" %>
+    <% end %>
+  </div>
+
 </div>

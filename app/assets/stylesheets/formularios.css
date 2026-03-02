@@ -101,3 +101,34 @@
   padding-left: 20px;
   font-size: 0.9rem;
 }
+
+/*Botão de Cancelar*/
+
+/* Botão de Excluir */
+/* O wrapper que o Rails cria em volta do botão excluir */
+.action-delete-form {
+  margin-left: auto; /* Empurra o botão de excluir para o extremo direito */
+}
+
+/* O botão vermelho */
+
+.btn-delete {
+  background-color: #d9534f; 
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  
+  margin-left: auto; 
+}
+
+.btn-delete:hover {
+  background-color: #c9302c; 
+  color: white; 
+  transform: translateY(-1px); 
+}

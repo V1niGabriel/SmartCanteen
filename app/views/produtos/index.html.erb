@@ -1,11 +1,12 @@
 <% content_for :title, "Produtos" %>
 
 <div class="main-card-container">
-  <div class="page-header-row">
-    <h1>Catálogo de Produtos</h1>
-    <%= link_to "+ Novo Produto", new_produto_path, class: "new-prod-btn" %>
-  </div>
-
+   <div class="page-header-row">
+      <h1>Catálogo de Produtos</h1>
+      <% if can? :create, Produto %>
+       <%= link_to "+ Novo Produto", new_produto_path, class: "new-prod-btn" %>
+      <% end %>
+    </div>
   <div id="produtos" class="card-grid-container">
     <% @produtos.each do |produto| %>
       <div class="product-item-card">
@@ -14,7 +15,7 @@
         </div>
         <div class="card-info-section">
           <div class="card-info-top">
-             <h2 class="product-category-title"><%= produto.tipo.upcase %></h2>
+             <%# <h2 class="product-category-title"><%= produto.tipo.upcase %><%#</h2> %>
           </div>
           <div class="card-info-bottom">
             <div class="product-details-text">

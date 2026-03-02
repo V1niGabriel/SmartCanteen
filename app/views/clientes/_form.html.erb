@@ -1,8 +1,8 @@
-<%= form_with(model: cliente) do |form| %>
+<%= form_with(model: cliente, class: "smart-form" ) do |form| %>
+  <%# Bloco para exibir erros caso o usuário tente salvar faltando informações %>
   <% if cliente.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(cliente.errors.count, "error") %> prohibited this cliente from being saved:</h2>
-
+    <div class="form-errors">
+      <h3><%= pluralize(cliente.errors.count, "erro") %> impediram de salvar:</h3>
       <ul>
         <% cliente.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,12 +11,18 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :nome, style: "display: block" %>
-    <%= form.text_field :nome %>
+  <div class="form-group">
+    <%= form.label :nome, "Nome do Cliente", class: "form-label" %>
+    <%= form.text_field :nome, class: "form-input", placeholder: "xxxxxxxx " %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="form-actions">
+    <%= form.submit "Salvar cliente", class: "btn-submit" %>
+    <%= link_to "Cancelar", clientes_path, class: "btn-cancel" %>
+
+    <%# O if persisted? garante que o botão só apareça na edição, e não na criação %>
+    <% if cliente.persisted? %>
+      <%= button_to "Excluir", @cliente, method: :delete, class: "btn-delete"%>
+    <% end %>
   </div>
 <% end %>

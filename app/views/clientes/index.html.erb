@@ -1,16 +1,24 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Clientes" %>
 
-<h1>Clientes</h1>
-
-<div id="clientes">
-  <% @clientes.each do |cliente| %>
-    <%= render cliente %>
-    <p>
-      <%= link_to "Show this cliente", cliente %>
-    </p>
+<div class="cliente-page-header">
+  <h1 class="cliente-page-title">Clientes</h1>
+  <% if can? :Create, Cliente%>
+    <%= link_to "+ Novo Cliente", new_cliente_path, class: "cliente-btn-primary" %>
   <% end %>
 </div>
 
-<%= link_to "New cliente", new_cliente_path %>
+<div class="cliente-cards-grid">
+  <% @clientes.each do |cliente| %>
+    <div class="cliente-card-item">
+      <div class="cliente-card-info">
+        <span class="cliente-card-tag">CLIENTE</span>
+        
+        <h3 class="cliente-card-title"><%= cliente.nome %></h3> 
+      </div>
+      
+      <div class="cliente-card-action">
+        <%= link_to "→", edit_cliente_path(cliente), class: "cliente-btn-arrow", title: "Mostrar detalhes do cliente" %>
+      </div>
+    </div>
+  <% end %>
+</div>

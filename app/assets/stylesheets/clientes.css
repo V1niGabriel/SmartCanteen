@@ -1,0 +1,97 @@
+/* =========================================
+   ESTILIZAÇÃO DE PÁGINAS (Produtos, Clientes, etc)
+   ========================================= */
+
+/* Cabeçalho (Título e Botão) */
+.cliente-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #f4f5f7;
+  padding-bottom: 15px;
+}
+
+.cliente-page-title {
+  font-size: 2rem;
+  color: #333;
+  margin: 0;
+  font-weight: 700;
+}
+
+/* Botão Estilo "Novo Produto / Novo Cliente" */
+.cliente-btn-primary {
+  background-color: #df7b64; /* Cor salmão/laranja da sua foto */
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.cliente-btn-primary:hover {
+  background-color: #c56550;
+  color: #ffffff;
+}
+
+/* =========================================
+   GRID DE CARDS
+   ========================================= */
+.cliente-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* Estilo Individual do Cartão */
+.cliente-card-item {
+  background-color: #ffffff;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.cliente-card-item:hover {
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.cliente-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Tag verdinha parecida com a de "SALGADO" */
+.cliente-card-tag {
+  font-size: 0.75rem;
+  color: #6b8e23; 
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cliente-card-title {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #2d3436;
+}
+
+/* Seta indicativa no lugar do texto "Mostrar cliente" */
+.cliente-btn-arrow {
+  color: #df7b64;
+  text-decoration: none;
+  font-size: 1.5rem;
+  transition: transform 0.2s;
+  padding: 5px;
+}
+
+.cliente-btn-arrow:hover {
+  transform: translateX(4px); /* Faz a setinha andar pra direita ao passar o mouse */
+  color: #c56550;
+}

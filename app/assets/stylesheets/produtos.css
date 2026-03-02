@@ -127,12 +127,47 @@
   transform: translateX(3px); /* Pequeno efeito de movimento */
 }
 
-/* Mudar a cor de fundo do body para uma imagem borrada, se desejar */
-/*
-body {
-  background-image: url('<%= image_path("blurred_background.jpg") %>');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+/* =========================================
+   ESTILIZAÇÃO DA PÁGINA SHOW (DETALHES)
+   ========================================= */
+
+/* Caixa interna para destacar os dados de leitura */
+.details-info {
+  background-color: #fcfcfc;
+  padding: 25px;
+  border-radius: 8px;
+  border: 1px solid #eaeaea;
+  margin-bottom: 30px;
+  margin-top: 10px;
 }
-*/
+
+/* Linha de cada informação (Nome, Preço, etc) */
+.details-row {
+  font-size: 1.1rem;
+  color: #444;
+  margin: 0 0 15px 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+}
+
+/* Remove a linha de baixo do último item */
+.details-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* Destaca o título do campo (Nome:, Preço:) com o azul da marca */
+.details-row strong {
+  color: #003247; 
+  width: 90px; /* Mantém todos os textos alinhados numa coluna invisível */
+  display: inline-block;
+}
+
+.details-row span {
+  font-weight: 500;
+  color: #2d3436;
+}
+
